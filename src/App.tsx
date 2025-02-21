@@ -42,6 +42,8 @@ import {
   AccountPreviewProps,
 } from "@toolpad/core/Account";
 import { green } from "@mui/material/colors";
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 // import type { Router, Session } from "@toolpad/core/AppProvider";
 // import { SidebarFooter } from "./components/ui/sidebar";
 
@@ -58,7 +60,7 @@ const NAVIGATION: Navigation = [
   {
     segment: "chatbot",
     title: "Chat Bot",
-    icon: <ShoppingCartIcon />,
+    icon: <SmartToyIcon />,
   },
   {
     kind: "divider",
@@ -358,13 +360,16 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
 
   const [pathname, setPathname] = React.useState("/dashboard");
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const router = React.useMemo<Router>(() => {
     return {
-      pathname,
-      searchParams: new URLSearchParams(),
-      navigate: (path) => setPathname(String(path)),
+      pathname: location.pathname,
+      searchParams: new URLSearchParams(location.search),
+      navigate: (path) => navigate(String(path)),
     };
-  }, [pathname]);
+  }, [location, navigate]);
 
   // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
@@ -398,7 +403,7 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
           sidebarFooter: SidebarFooterAccount,
         }}
       >
-        <DemoPageContent pathname={router.pathname} />
+        <Outlet />
       </DashboardLayout>
     </AppProvider>
     // preview-end

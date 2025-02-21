@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import './App.css'
 import { Button } from './components/ui/button'
-
+import { Calendar } from './components/ui/calendar'
+import Layout from './pages/layout'
+import { Checkbox } from '@radix-ui/react-checkbox'
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-    <h1 className='font-bold'>Hello</h1>
-      <Button variant='destructive'>Suthakar</Button>
+      <Layout/>
+      <Checkbox />
     </>
   )
 }

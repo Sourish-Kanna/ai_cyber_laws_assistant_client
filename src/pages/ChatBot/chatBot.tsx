@@ -3,7 +3,7 @@ import * as components from "../components/zindex";
 import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
 import Button from "@mui/material/Button";
 import { Tooltip, Zoom } from "@mui/material";
-import * as pages from '../../index.ts'
+import * as pages from "../../index.ts";
 
 function ChatBot() {
   const [height, setHeight] = useState(400);
@@ -33,10 +33,10 @@ function ChatBot() {
           position: "relative",
         }}
       >
-        <div>
+        <div className="flex flex-row w-[100%] h-[100%]">
           <div
             className={`transition-all duration-300 ease-in-out overflow-hidden`}
-            style={{ width: isOpen ? 300 : 0 }}
+            style={{ width: isOpen ? "25%" : 0 }}
           >
             <components.VirtualizedList
               height={height}
@@ -46,7 +46,7 @@ function ChatBot() {
               overscanCount={10}
             />
           </div>
-          <pages.ChattingPage/>
+          <pages.ChattingPage width={isOpen ? "75%" : "100%"} />
         </div>
         <Tooltip
           title={isOpen ? "Close" : "Open"}

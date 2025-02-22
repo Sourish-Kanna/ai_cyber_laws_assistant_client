@@ -49,6 +49,7 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "./ui/tooltip.tsx";
+import { Textarea } from "./ui/textarea.tsx";
 
 export {
   Button,
@@ -95,4 +96,6 @@ export {
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
+  Input,
+  Textarea,
 };

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import * as components from "./components/zindex";
 import { PanelLeftOpen, PanelRightOpen } from "lucide-react";
 import Button from "@mui/material/Button";
+import { Tooltip, Zoom } from "@mui/material";
 
 function ChatBot() {
   const [height, setHeight] = useState(400);
@@ -42,22 +43,37 @@ function ChatBot() {
           overscanCount={10}
         />
       </div>
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        variant="outlined"
-        style={{
-          position: "absolute",
-          left: isOpen ? 300 : 0, 
-          top: "5%",
-          transform: "translateY(-50%)",
-          zIndex: 1,
-          minWidth: "auto",
-          transition: "left 0.3s ease-in-out",
-          border:"none"
+      <Tooltip
+        title={isOpen ? "Close" : "Open"}
+        placement="right-start"
+        PopperProps={{
+          modifiers: [
+            {
+              name: "offset",
+              options: {
+                offset: [0, 10], // [horizontal, vertical] offset
+              },
+            },
+          ],
         }}
       >
-        {isOpen ? <PanelRightOpen /> : <PanelLeftOpen />}
-      </Button>
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          variant="outlined"
+          style={{
+            position: "absolute",
+            left: isOpen ? 300 : 0,
+            top: "5%",
+            transform: "translateY(-50%)",
+            zIndex: 1,
+            minWidth: "auto",
+            transition: "left 0.3s ease-in-out",
+            border: "none",
+          }}
+        >
+          {isOpen ? <PanelRightOpen /> : <PanelLeftOpen />}
+        </Button>
+      </Tooltip>
     </div>
   );
 }

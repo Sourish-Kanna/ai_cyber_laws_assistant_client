@@ -10,10 +10,10 @@ function inputArea() {
         placeholder="Type your message here."
       />
       <div className="flex justify-between ">
-        <IconButton aria-label="fingerprint" color="default">
+        <IconButton aria-label="Plus" color="default">
           <Plus />
         </IconButton>
-        <IconButton aria-label="fingerprint" color="success">
+        <IconButton aria-label="Plus" color="success">
           <SendHorizontal />
         </IconButton>
       </div>

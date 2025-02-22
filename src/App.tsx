@@ -32,7 +32,8 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { SearchIcon, CheckCircleIcon } from "lucide-react";
+import { SearchIcon, CheckCircleIcon, MailIcon } from "lucide-react";
+import Badge from "@mui/material/Badge";
 import CloudCircleIcon from "@mui/icons-material/CloudCircle";
 import {
   Account,
@@ -42,7 +43,7 @@ import {
   AccountPreviewProps,
 } from "@toolpad/core/Account";
 import { green } from "@mui/material/colors";
-import SmartToyIcon from '@mui/icons-material/SmartToy';
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 // import type { Router, Session } from "@toolpad/core/AppProvider";
 // import { SidebarFooter } from "./components/ui/sidebar";
@@ -104,7 +105,7 @@ const demoTheme = createTheme({
           main: green[500],
           light: green[300],
           dark: green[700],
-          contrastText: '#fff',
+          contrastText: "#fff",
         },
       },
     },
@@ -114,7 +115,7 @@ const demoTheme = createTheme({
           main: green[700],
           light: green[500],
           dark: green[900],
-          contrastText: '#fff',
+          contrastText: "#fff",
         },
       },
     },
@@ -150,7 +151,7 @@ function ToolbarActionsSearch() {
   return (
     <Stack direction="row">
       <Tooltip title="Search" enterDelay={1000}>
-        <div>
+        <div className="w-40">
           <IconButton
             type="button"
             aria-label="search"
@@ -167,18 +168,20 @@ function ToolbarActionsSearch() {
         label="Search"
         variant="outlined"
         size="small"
+        fullWidth
         slotProps={{
           input: {
             endAdornment: (
-              <IconButton type="button" aria-label="search" size="small">
+              <IconButton type="button" aria-label="search" size="medium" >
                 <SearchIcon />
               </IconButton>
             ),
             sx: { pr: 0.5 },
           },
         }}
-        sx={{ display: { xs: "none", md: "inline-block" }, mr: 1 }}
+        sx={{ display: { xs: "none", md: "inline-block" }, mr: 1 ,width:'25vw'}}
       />
+      <NotificationBar />
       <ThemeSwitcher />
     </Stack>
   );
@@ -338,6 +341,32 @@ function SidebarFooterAccount({ mini }: SidebarFooterProps) {
     />
   );
 }
+
+const NotificationBar = () => {
+  return (
+    <Stack spacing={2} direction="row" alignItems="center" sx={{ mr: 1 }}>
+      <Tooltip 
+        title="Notifications"
+        PopperProps={{
+          modifiers: [
+            {
+              name: 'offset',
+              options: {
+                offset: [0, 10], // [horizontal, vertical] offset
+              },
+            },
+          ],
+        }}
+      >
+        <Badge badgeContent={4} color="success">
+          <Box sx={{ color: "text.primary" }}>
+            <MailIcon fontSize="small" />
+          </Box>
+        </Badge>
+      </Tooltip>
+    </Stack>
+  );
+};
 
 interface DemoProps {
   /**

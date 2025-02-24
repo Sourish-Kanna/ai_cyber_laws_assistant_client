@@ -1,0 +1,22 @@
+/* For WebKit (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Vertical scrollbar width */
+  height: 8px; /* Horizontal scrollbar height */
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Hide track */
+}
+
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #2f5d28; /* Visible thumb */
+  border-radius: 4px; /* Optional rounded corners */
+}
+
+/* For Firefox */
+.hide-scrollbar {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: #2f5d28 transparent; /* thumb and track color */
+}
+
+/* Remove previous IE/Edge hiding rules */

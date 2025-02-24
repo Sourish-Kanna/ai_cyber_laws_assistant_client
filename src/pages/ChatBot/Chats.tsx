@@ -2,6 +2,7 @@ import React from "react";
 import * as pages from "../../index.ts";
 import { Tooltip } from "@mui/material";
 import { Copy } from "lucide-react";
+import './components/index.css'
 
 function Chats() {
   return (

@@ -31,9 +31,16 @@ function renderRow(props: ListChildComponentProps<RowData>) {
   if (!section) return null;
 
   return (
-    <ListItem style={style} key={section.id} component="div" disablePadding>
+    <ListItem style={style} key={section.chat_section_id} component="div" disablePadding>
       <ListItemButton>
-        <ListItemText primary={section.title} secondary={section.time} />
+        <ListItemText
+          primary={section.title}
+          // secondary={section.date}
+        />
+        <div className="flex flex-col">
+          <p className="text-[12px] text-[#7bb972]">{section.time}</p>
+          <p className="text-[10px] text-gray-500"> {section.date}</p>
+        </div>
         <Tooltip
           title="Delete"
           placement="right-start"
@@ -42,7 +49,7 @@ function renderRow(props: ListChildComponentProps<RowData>) {
         >
           <IconButton
             aria-label="Delete"
-            onClick={() => handleDelete(section.id)}
+            onClick={() => handleDelete(section.chat_section_id)}
             edge="end"
           >
             <Trash size={18} />
@@ -68,6 +75,7 @@ export default function VirtualizedList({
         height: height,
         maxWidth: width,
         bgcolor: "background.paper",
+        borderRight: `2px solid #1c261a`,
       }}
     >
       <FixedSizeList<RowData>

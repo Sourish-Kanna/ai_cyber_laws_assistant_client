@@ -5,18 +5,23 @@ import { PanelLeftOpen, PanelRightOpen, Plus } from "lucide-react";
 import Button from "@mui/material/Button";
 import { Tooltip, Zoom } from "@mui/material";
 import * as pages from "../../index.ts";
-
+import * as chatServices from "../../Services/ChatServices.ts";
+import { formatDateAndTime } from "@/helpers/commonHelper.ts";
 export interface ChatSection {
-  id: number;
+  chat_section_id: number;
   title: string;
   time: string;
+  date:string;
 }
 
 function ChatBot() {
+
+//data
   const [height, setHeight] = useState(400);
   const [isOpen, setIsOpen] = useState(true);
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
+//methods
   useEffect(() => {
     const updateHeight = () => {
       if (chatBoxRef.current) {
@@ -30,31 +35,64 @@ function ChatBot() {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
-  const [chatSections, setChatSections] = useState<ChatSection[]>(() =>
-    Array.from({ length: 20 }, (_, i) => ({
-      id: i + 1,
-      title: `Chat Session ${i + 1}`,
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    }))
-  );
+  const [chatSections, setChatSections] = useState<ChatSection[]>([]);
 
-  const handleAddChat = () => {
+  useEffect(() => {
+    const fetchChatSections = async () => {
+      try {
+        // const userId = "user123";
+        const response = await chatServices.getAllChatSections(1);
+        // console.log("response", response);
+        const sections = response.data.data.map((section: any) => {
+          const FormatedDate = formatDateAndTime(section.updatedAt);
+          return {
+            chat_section_id: section.chat_section_id,
+            title: section.title,
+            time: FormatedDate.time,
+            date: FormatedDate.date
+          };
+        });
+
+        setChatSections(sections);
+      } catch (error) {
+        console.error("Failed to load chat sections:", error);
+      }
+    };
+
+    fetchChatSections();
+  }, []);
+
+  const handleAddChat = async() => {
     const newChat: ChatSection = {
-      id: Date.now(),
+      chat_section_id: Date.now(),
       title: "New Chat",
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
       }),
+      date:new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
-    setChatSections((prev) => [newChat , ...prev]);
+    const payload = {
+      user_id : 1,
+    }
+    const response = await chatServices.createChatSection(payload);
+    console.log(response);
+    setChatSections((prev) => [newChat, ...prev]);
   };
 
-  const handleDeleteChat = (id: number) => {
-    setChatSections((prev) => prev.filter((section) => section.id !== id));
+  const handleDeleteChat = async(id: number) => {
+
+    const payload = {
+      user_id:1,
+      chat_section_id : id
+    }
+    // alert(id)
+    const response = await chatServices.deleteChatSection(payload);
+    console.log(response)
+    setChatSections((prev) => prev.filter((section) => section.chat_section_id !== id));
   };
 
   return (
@@ -66,7 +104,7 @@ function ChatBot() {
         position: "relative",
       }}
     >
-      <div className="flex flex-row w-[100%] h-[100%]">
+      <div className="flex flex-row w-[100%] h-[100%] ">
         <div
           className={`transition-all duration-300 ease-in-out overflow-hidden`}
           style={{ width: isOpen ? "25%" : 0 }}

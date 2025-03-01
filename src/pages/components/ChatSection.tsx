@@ -16,23 +16,30 @@ interface VirtualizedListProps {
   overscanCount?: number;
   chatSections: ChatSection[];
   onDelete: (id: number) => void;
+  onSelect: (id: number) => void;
 }
 
 interface RowData {
   chatSections: ChatSection[];
   handleDelete: (id: number) => void;
+  handleSelect: (id: number) => void;
 }
 
 function renderRow(props: ListChildComponentProps<RowData>) {
   const { index, style, data } = props;
-  const { chatSections, handleDelete } = data;
+  const { chatSections, handleDelete, handleSelect } = data;
   const section = chatSections[index];
 
   if (!section) return null;
 
   return (
-    <ListItem style={style} key={section.chat_section_id} component="div" disablePadding>
-      <ListItemButton>
+    <ListItem
+      style={style}
+      key={section.chat_section_id}
+      component="div"
+      disablePadding
+    >
+      <ListItemButton onClick={() => handleSelect(section.chat_section_id)}>
         <ListItemText
           primary={section.title}
           // secondary={section.date}
@@ -67,6 +74,7 @@ export default function VirtualizedList({
   overscanCount = 5,
   chatSections,
   onDelete,
+  onSelect,
 }: VirtualizedListProps) {
   return (
     <Box
@@ -84,7 +92,11 @@ export default function VirtualizedList({
         itemSize={itemSize}
         itemCount={chatSections.length}
         overscanCount={overscanCount}
-        itemData={{ chatSections, handleDelete: onDelete }}
+        itemData={{
+          chatSections,
+          handleDelete: onDelete,
+          handleSelect: onSelect,
+        }}
       >
         {renderRow}
       </FixedSizeList>

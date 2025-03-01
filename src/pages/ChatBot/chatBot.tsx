@@ -8,6 +8,8 @@ import * as pages from "../../index.ts";
 import * as chatServices from "../../Services/ChatServices.ts";
 import { formatDateAndTime } from "@/helpers/commonHelper.ts";
 import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Outlet, useNavigate } from "react-router-dom";
+import * as routes from "../../routes.ts";
 export interface ChatSection {
   chat_section_id: number;
   title: string;
@@ -20,6 +22,9 @@ function ChatBot() {
   const [height, setHeight] = useState(400);
   const [isOpen, setIsOpen] = useState(true);
   const chatBoxRef = useRef<HTMLDivElement>(null);
+  const [chatSections, setChatSections] = useState<ChatSection[]>([]);
+
+  const navigate = useNavigate();
 
   //methods
   useEffect(() => {
@@ -34,8 +39,6 @@ function ChatBot() {
 
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
-
-  const [chatSections, setChatSections] = useState<ChatSection[]>([]);
 
   useEffect(() => {
     const fetchChatSections = async () => {
@@ -79,7 +82,7 @@ function ChatBot() {
       user_id: 1,
     };
     const response = await chatServices.createChatSection(payload);
-    toast.success('Created Successfully !')
+    toast.success("Created Successfully !");
     setChatSections((prev) => [newChat, ...prev]);
   };
 
@@ -91,7 +94,7 @@ function ChatBot() {
     // alert(id)
     const response = await chatServices.deleteChatSection(payload);
     // console.log(response);
-    toast.success('Deleted Successfully !')
+    toast.success("Deleted Successfully !");
     setChatSections((prev) =>
       prev.filter((section) => section.chat_section_id !== id)
     );
@@ -130,9 +133,13 @@ function ChatBot() {
             width={300}
             chatSections={chatSections}
             onDelete={handleDeleteChat}
+            onSelect={(id: number) => navigate(`/chatbot/${id}`)}
           />
         </div>
-        <pages.ChattingPage width={isOpen ? "75%" : "100%"} />
+        {/* <pages.ChattingPage width={isOpen ? "75%" : "100%"} /> */}
+        <div>
+          <Outlet />
+        </div>
       </div>
       <Tooltip
         title={isOpen ? "Close" : "Open"}

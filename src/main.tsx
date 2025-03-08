@@ -9,6 +9,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import {GoogleOAuthProvider} from  "@react-oauth/google";
 
 const router = createBrowserRouter([
   {
@@ -31,11 +32,17 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: routes.LOGIN, // Add this route
+    element: <Pages.Login />,
+  },
   // {
   //   path:'/chatbot',
   //   element:<ChatBot/>
   // }
 ]);
 createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />
+  <GoogleOAuthProvider clientId="735728164257-p5p9ohe9so7t6bkr6gj10vdgfuu8vkc2.apps.googleusercontent.com">
+    <RouterProvider router={router} />
+  </GoogleOAuthProvider>
 );

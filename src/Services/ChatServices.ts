@@ -3,7 +3,7 @@ import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_BASE_SERVER_URL;
 
 interface CreateChatSectionPayload {
-  user_id: number; 
+  user_id: number;
 }
 
 interface DeleteChatSectionPayload {
@@ -11,6 +11,10 @@ interface DeleteChatSectionPayload {
   chat_section_id: number;
 }
 
+interface GetMessagesParams {
+  user_id: number;
+  chat_section_id: number | null;
+}
 
 export const getAllChatSections = async (userId: number) => {
   if (!userId) {
@@ -19,7 +23,7 @@ export const getAllChatSections = async (userId: number) => {
 
   try {
     const response = await axios.get(`${API_BASE_URL}/chat/chat_section/all`, {
-      params: { user_id: userId },
+      params: { user_id: userId }
     });
     return response;
   } catch (error) {
@@ -54,4 +58,14 @@ export const deleteChatSection = async (payload: DeleteChatSectionPayload) => {
   }
 };
 
-
+export const get_messages = async (params: GetMessagesParams) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/chat/chats`, {
+      params:params,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error while creating messages", error);
+    throw error;
+  }
+};

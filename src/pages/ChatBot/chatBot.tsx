@@ -70,6 +70,8 @@ function ChatBot() {
       };
       const response = await chatServices.createChatSection(payload);
       fetchChatSections();
+      // console.log(response.data.data)
+      navigate(`/chatbot/${response.data.data.chat_section_id}`);
       toast.success("Created Successfully!");
     } catch (error) {
       console.error("Error creating chat section:", error);

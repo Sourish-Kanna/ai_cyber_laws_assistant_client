@@ -1,12 +1,23 @@
-import React from 'react'
+import React from "react";
 
-function responseArea() {
-  
-  return (
-    <div className='bg-[hsl(0,0%,15%)] p-3 rounded-md mb-4 max-w-[75%]'>
-      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Molestias illum blanditiis aperiam tempore, recusandae illo ad exercitationem commodi veniam laborum, natus excepturi nulla cumque delectus, doloremque reprehenderit quam ipsam assumenda. Pariatur dicta neque voluptas veniam aspernatur numquam ea suscipit, doloribus quis quidem harum, ipsam exercitationem culpa! Distinctio deleniti veritatis quasi facere voluptatem sit, blanditiis, dicta, porro dolores ad corporis fuga quidem incidunt autem nam quam rem id? Recusandae sunt illum quaerat earum exercitationem tempore blanditiis neque adipisci repellat. Expedita fuga explicabo obcaecati eos dolorum aliquam vitae deserunt nemo architecto laudantium aliquid distinctio totam optio, qui consequuntur et quibusdam vero reprehenderit commodi tempore, culpa doloribus. Facere quam nulla velit quos sequi accusantium. Incidunt dolor consequatur minima facilis, iure expedita aliquid doloribus nisi culpa recusandae qui mollitia illo dolore aspernatur beatae, ducimus quam officia dignissimos ut aut! Labore hic impedit eaque quod accusamus, reprehenderit molestiae id fugit numquam aperiam a voluptatem quibusdam accusantium dolores nulla optio expedita consectetur aliquid ipsa modi inventore, suscipit dolore nesciunt eligendi! Excepturi impedit, reprehenderit a tempora nesciunt provident adipisci corrupti cumque vel voluptate omnis ex? Dignissimos eligendi iure natus? Ea ipsam veniam tempora delectus soluta dicta modi quia nihil quae, repellat debitis, accusamus voluptatem aperiam et dignissimos. Ad vero in similique! Quaerat ipsum esse tempora officiis itaque fugit eligendi accusantium deleniti vero veniam, dolor ratione blanditiis, distinctio sunt ea quod reprehenderit sequi nihil, perspiciatis facilis ipsam. Sapiente mollitia tempore atque delectus nam in! Laudantium quae quia eos vel sequi quas enim quidem adipisci non sit facilis, dolorem maxime exercitationem, porro eveniet consectetur iure assumenda saepe commodi! Neque deleniti eaque ipsa minima aspernatur harum fugiat ipsum quam, aperiam voluptatibus necessitatibus repudiandae excepturi, praesentium deserunt consectetur odit! Dolores voluptatem repellat repellendus mollitia fugiat ab quasi et sapiente nam amet dolore, placeat sequi id sit dolorem? Quo adipisci fuga ipsa.
-    </div>
-  )
+interface ResponseAreaProps {
+  message: string;
 }
 
-export default responseArea
+function responseArea({ message }: ResponseAreaProps) {
+  //interface
+
+  //data
+
+  //useEffect
+
+  //methods
+
+  return (
+    <div className="bg-[hsl(0,0%,15%)] p-3 rounded-md mb-4 max-w-[75%]">
+      {message}
+    </div>
+  );
+}
+
+export default responseArea;

@@ -33,12 +33,7 @@ function renderRow(props: ListChildComponentProps<RowData>) {
   if (!section) return null;
 
   return (
-    <ListItem
-      style={style}
-      key={section.chat_section_id}
-      component="div"
-      disablePadding
-    >
+    <ListItem style={style} key={section.chat_section_id} component="div" disablePadding>
       <ListItemButton onClick={() => handleSelect(section.chat_section_id)}>
         <ListItemText
           primary={section.title}
@@ -48,12 +43,7 @@ function renderRow(props: ListChildComponentProps<RowData>) {
           <p className="text-[12px] text-[#7bb972]">{section.time}</p>
           <p className="text-[10px] text-gray-500"> {section.date}</p>
         </div>
-        <Tooltip
-          title="Delete"
-          placement="right-start"
-          enterDelay={300}
-          TransitionComponent={Zoom}
-        >
+        <Tooltip title="Delete" placement="right-start" enterDelay={300} TransitionComponent={Zoom}>
           <IconButton
             aria-label="Delete"
             onClick={() => handleDelete(section.chat_section_id)}
@@ -74,7 +64,7 @@ export default function VirtualizedList({
   overscanCount = 5,
   chatSections,
   onDelete,
-  onSelect,
+  onSelect
 }: VirtualizedListProps) {
   return (
     <Box
@@ -83,7 +73,7 @@ export default function VirtualizedList({
         height: height,
         maxWidth: width,
         bgcolor: "background.paper",
-        borderRight: `2px solid #1c261a`,
+        borderRight: width === 0 ? "none" : "2px solid #1c261a"
       }}
     >
       <FixedSizeList<RowData>
@@ -95,7 +85,7 @@ export default function VirtualizedList({
         itemData={{
           chatSections,
           handleDelete: onDelete,
-          handleSelect: onSelect,
+          handleSelect: onSelect
         }}
       >
         {renderRow}

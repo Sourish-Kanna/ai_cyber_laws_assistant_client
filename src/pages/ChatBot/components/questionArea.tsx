@@ -1,12 +1,36 @@
-import React from 'react'
-import * as pages from '../../../index.ts'
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
-function questionArea() {
-  return (
-    <div className='bg-[#1c261a] p-2 rounded-md mb-4 max-w-[75%]'>
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro consequuntur amet distinctio? Consequuntur earum nisi aperiam repellat quis dolor error dolore nemo ipsam, vel quas odit porro atque quos odio! Tenetur labore rem at unde repellat maxime iusto consequatur quidem dolorem temporibus? Unde officia sequi aut veritatis. Sed iste consequatur corporis at esse minima temporibus dicta saepe animi, impedit ab veritatis autem similique aliquam magni a cupiditate repellendus velit. Nihil id unde nostrum cupiditate sint quam temporibus enim? Pariatur veritatis optio sed nemo dignissimos cumque, provident laboriosam officiis minus omnis nulla ab debitis voluptatem, tenetur aperiam! Sunt magnam praesentium reprehenderit, velit aut odio dolores veritatis eos assumenda at id dicta quae molestiae, modi voluptate sed! Vel laborum ad animi expedita, dolore repellendus quisquam iusto atque ipsum voluptas amet excepturi in doloribus veritatis molestias natus assumenda obcaecati soluta esse nesciunt repudiandae eligendi quasi est dolorem. Eos consequatur tenetur, fugit tempore possimus inventore, vitae est aliquid sequi, ipsum repellendus blanditiis corporis delectus et assumenda quidem eaque id suscipit rerum. Quae placeat ex similique quis dignissimos ut corrupti ullam adipisci eligendi vel asperiores ipsum aliquam incidunt, odio doloremque distinctio quam sed voluptas eius iste. Aspernatur, dolorum nostrum! Necessitatibus rem eveniet animi quasi deleniti eligendi, sunt delectus ea explicabo hic dolores maiores laborum magnam voluptatibus, molestiae commodi ab nam nostrum repellendus autem obcaecati ad? Accusantium provident esse alias dolorum distinctio minus neque quas quam iusto est vel velit iste praesentium veniam eius totam voluptatum, placeat molestiae laudantium sequi expedita soluta amet! Ipsum, vero quod cupiditate iusto cumque dicta debitis suscipit magni amet voluptate corrupti sed qui. Aperiam porro rerum commodi omnis odit reiciendis, molestiae asperiores, nam inventore aliquid totam magni modi assumenda adipisci et nihil quo recusandae, odio doloremque illum! Dolorum harum voluptates nostrum tempora dolore maiores numquam, rem laborum eveniet dignissimos ea at.
-    </div>
-  )
+interface QuestionAreaProps {
+  message: string;
 }
 
-export default questionArea
+function QuestionArea({ message }: QuestionAreaProps) {
+  return (
+    <div className="bg-[#1c261a] p-4 mr-3 rounded-md mb-4 max-w-[75%] text-white">
+      {/* <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        components={{
+          h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mb-3 mt-4" {...props} />,
+          h2: ({ node, ...props }) => <h2 className="text-xl font-bold mb-2 mt-3" {...props} />,
+          h3: ({ node, ...props }) => <h3 className="text-lg font-semibold mb-2 mt-2" {...props} />,
+          strong: ({ node, ...props }) => <strong className="text-[#86c232]" {...props} />,
+          ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-3" {...props} />,
+          ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-3" {...props} />,
+          li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+          p: ({ node, ...props }) => <p className="mb-3 leading-relaxed" {...props} />,
+          code: ({ node, ...props }) => (
+            <code className="bg-gray-800 p-1 rounded text-sm" {...props} />
+          ),
+          a: ({ node, ...props }) => <a className="text-[#86c232] underline" {...props} />
+        }}
+      > */}
+        {message}
+      {/* </ReactMarkdown> */}
+    </div>
+  );
+}
+
+export default QuestionArea;

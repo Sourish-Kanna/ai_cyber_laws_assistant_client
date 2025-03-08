@@ -10,9 +10,7 @@ import "./components/index.css";
 
 function chattingPage() {
   return (
-    <div
-      className={`w-full h-full flex flex-col justify-between items-center p-4`}
-    >
+    <div className={`w-full h-full flex flex-col justify-between items-center p-4`}>
       <div className="flex-1 max-w-[50vw] min-w-[50vw] overflow-hidden ">
         <div className="h-full overflow-y-auto overflow-x-hidden hide-scrollbar">
           <pages.Chats />

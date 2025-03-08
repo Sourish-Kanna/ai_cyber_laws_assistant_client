@@ -40,64 +40,53 @@ function ChatBot() {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
-  useEffect(() => {
-    const fetchChatSections = async () => {
-      try {
-        // const userId = "user123";
-        const response = await chatServices.getAllChatSections(1);
-        // console.log("response", response);
-        const sections = response.data.data.map((section: any) => {
-          const FormatedDate = formatDateAndTime(section.updatedAt);
-          return {
-            chat_section_id: section.chat_section_id,
-            title: section.title,
-            time: FormatedDate.time,
-            date: FormatedDate.date,
-          };
-        });
-        // toast.success(`${response.data.message}`);
-        setChatSections(sections);
-      } catch (error) {
-        console.error("Failed to load chat sections:", error);
-      }
-    };
+  const fetchChatSections = async () => {
+    try {
+      const response = await chatServices.getAllChatSections(1);
+      const sections = response.data.data.map((section: any) => {
+        const FormatedDate = formatDateAndTime(section.updatedAt);
+        return {
+          chat_section_id: section.chat_section_id,
+          title: section.title,
+          time: FormatedDate.time,
+          date: FormatedDate.date
+        };
+      });
+      // toast.success(`${response.data.message}`);
+      setChatSections(sections);
+    } catch (error) {
+      console.error("Failed to load chat sections:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchChatSections();
   }, []);
 
   const handleAddChat = async () => {
-    const newChat: ChatSection = {
-      chat_section_id: Date.now(),
-      title: "New Chat",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      date: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-    const payload = {
-      user_id: 1,
-    };
-    const response = await chatServices.createChatSection(payload);
-    toast.success("Created Successfully !");
-    setChatSections((prev) => [newChat, ...prev]);
+    try {
+      const payload = {
+        user_id: 1
+      };
+      const response = await chatServices.createChatSection(payload);
+      fetchChatSections();
+      toast.success("Created Successfully!");
+    } catch (error) {
+      console.error("Error creating chat section:", error);
+      toast.error("Failed to create chat section.");
+    }
   };
 
   const handleDeleteChat = async (id: number) => {
     const payload = {
       user_id: 1,
-      chat_section_id: id,
+      chat_section_id: id
     };
     // alert(id)
     const response = await chatServices.deleteChatSection(payload);
     // console.log(response);
     toast.success("Deleted Successfully !");
-    setChatSections((prev) =>
-      prev.filter((section) => section.chat_section_id !== id)
-    );
+    setChatSections((prev) => prev.filter((section) => section.chat_section_id !== id));
   };
 
   return (
@@ -106,7 +95,7 @@ function ChatBot() {
       style={{
         width: "100%",
         height: "100%",
-        position: "relative",
+        position: "relative"
       }}
     >
       <ToastContainer
@@ -123,21 +112,23 @@ function ChatBot() {
         transition={Bounce}
       />
 
-      <div className="flex flex-row w-[100%] h-[100%] ">
+      <div
+        className={`flex flex-row w-[100%] h-[100%] ${isOpen ? "" : "justify-center items-center"}}`}
+      >
         <div
           className={`transition-all duration-300 ease-in-out overflow-hidden`}
           style={{ width: isOpen ? "25%" : 0 }}
         >
           <components.VirtualizedList
             height={height}
-            width={300}
+            width={isOpen ? 300 : 0}
             chatSections={chatSections}
             onDelete={handleDeleteChat}
             onSelect={(id: number) => navigate(`/chatbot/${id}`)}
           />
         </div>
         {/* <pages.ChattingPage width={isOpen ? "75%" : "100%"} /> */}
-        <div>
+        <div className={`w-${isOpen ? "75%" : "100%"} `}>
           <Outlet />
         </div>
       </div>
@@ -149,10 +140,10 @@ function ChatBot() {
             {
               name: "offset",
               options: {
-                offset: [0, 10],
-              },
-            },
-          ],
+                offset: [0, 10]
+              }
+            }
+          ]
         }}
       >
         <Button
@@ -166,7 +157,7 @@ function ChatBot() {
             zIndex: 1,
             minWidth: "auto",
             transition: "left 0.3s ease-in-out",
-            border: "none",
+            border: "none"
           }}
         >
           {isOpen ? <PanelRightOpen /> : <PanelLeftOpen />}
@@ -180,10 +171,10 @@ function ChatBot() {
             {
               name: "offset",
               options: {
-                offset: [0, 10],
-              },
-            },
-          ],
+                offset: [0, 10]
+              }
+            }
+          ]
         }}
       >
         <Button
@@ -197,7 +188,7 @@ function ChatBot() {
             zIndex: 1,
             minWidth: "auto",
             transition: "left 0.3s ease-in-out",
-            border: "none",
+            border: "none"
           }}
         >
           <Plus size={20} strokeWidth={3} />

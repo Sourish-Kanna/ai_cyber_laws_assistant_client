@@ -7,17 +7,9 @@ interface ResponseAreaProps {
   message: string;
 }
 
-function responseArea({ message }: ResponseAreaProps) {
-  //interface
-
-  //data
-
-  //useEffect
-
-  //methods
-
+function ResponseArea({ message }: ResponseAreaProps) {
   return (
-    <div className="bg-[hsl(0,0%,15%)] p-3 rounded-md mb-4 max-w-[75%]">
+    <div className="bg-[hsl(0,0%,15%)] p-3 rounded-md mb-4 max-w-[75%] break-words">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         components={{
@@ -27,18 +19,29 @@ function responseArea({ message }: ResponseAreaProps) {
           strong: ({ node, ...props }) => <strong className="text-[#86c232]" {...props} />,
           ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-3" {...props} />,
           ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-3" {...props} />,
-          li: ({ node, ...props }) => <li className="mb-1" {...props} />,
-          p: ({ node, ...props }) => <p className="mb-3 leading-relaxed" {...props} />,
+          li: ({ node, ...props }) => <li className="mb-1 break-words" {...props} />,
+          p: ({ node, ...props }) => <p className="mb-3 leading-relaxed break-words" {...props} />,
           code: ({ node, ...props }) => (
-            <code className="bg-gray-800 p-1 rounded text-sm" {...props} />
+            <code
+              className="bg-gray-800 p-1 rounded text-sm whitespace-pre-wrap break-words"
+              {...props}
+            />
           ),
-          a: ({ node, ...props }) => <a className="text-[#86c232] underline" {...props} />
+          pre: ({ node, ...props }) => (
+            <pre
+              className="bg-gray-800 p-2 rounded my-2 overflow-x-auto whitespace-pre-wrap break-words"
+              {...props}
+            />
+          ),
+          a: ({ node, ...props }) => (
+            <a className="text-[#86c232] underline break-words" {...props} />
+          )
         }}
       >
-      {message}
+        {message}
       </ReactMarkdown>
     </div>
   );
 }
 
-export default responseArea;
+export default ResponseArea;

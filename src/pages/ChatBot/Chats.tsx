@@ -33,7 +33,7 @@ function Chats({ messages, isLoading, isSending }: ChatsProps) {
   }
 
   if(messages.length === 0){
-    <div>Enter New Message !</div>
+    return <div className="h-full flex justify-center items-center text-5xl text-[#1f1f1f] ">Enter New Message</div>;
   }
 
   return (

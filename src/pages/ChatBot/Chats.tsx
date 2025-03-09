@@ -1,5 +1,5 @@
 // Chats.tsx
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import * as pages from "../../index.ts";
 import { Tooltip, CircularProgress } from "@mui/material";
 import { Copy } from "lucide-react";
@@ -24,6 +24,16 @@ interface ChatsProps {
 }
 
 function Chats({ messages, isLoading, isSending }: ChatsProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isSending]);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-full">
@@ -32,8 +42,12 @@ function Chats({ messages, isLoading, isSending }: ChatsProps) {
     );
   }
 
-  if(messages.length === 0){
-    return <div className="h-full flex justify-center items-center text-5xl text-[#1f1f1f] ">Enter New Message</div>;
+  if (messages.length === 0) {
+    return (
+      <div className="h-full flex justify-center items-center text-5xl text-[#1f1f1f] ">
+        Enter New Message
+      </div>
+    );
   }
 
   return (
@@ -62,6 +76,7 @@ function Chats({ messages, isLoading, isSending }: ChatsProps) {
           <CircularProgress size={20} />
         </div>
       )}
+      <div ref={messagesEndRef} />
     </div>
   );
 }

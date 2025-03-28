@@ -40,7 +40,7 @@ Edge Case Queries (Should trigger rejections)
 "Best VPN for streaming?"
 (Technical implementation → Redirect to IT experts)
 
-"Punishment for drunk driving?"
+" "
 (Physical crime → Immediate termination)
 
 "Fix my hacked WiFi router"

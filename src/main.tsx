@@ -33,8 +33,16 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: routes.LOGIN, // Add this route
+    path: routes.LOGIN,
     element: <Pages.Login />,
+  },
+  {
+    path: routes.LOGOUT,
+    element: <Pages.Logout />,
+  },
+  {
+    path: routes.REGISTER,
+    element: <Pages.Register />,
   },
   // {
   //   path:'/chatbot',

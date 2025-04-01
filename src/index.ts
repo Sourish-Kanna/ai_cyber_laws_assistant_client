@@ -9,3 +9,5 @@ export { default as questionArea } from "./pages/ChatBot/components/questionArea
 export { default as responseArea } from "./pages/ChatBot/components/responseArea.tsx";
 export { default as Chats } from "./pages/ChatBot/Chats.tsx";
 export { default as Login } from "./pages/Login.tsx";
+export { default as Logout } from "./pages/Logout.tsx";
+export { default as Register } from "./pages/Register.tsx";

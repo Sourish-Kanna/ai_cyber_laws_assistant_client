@@ -1,7 +1,9 @@
+// InputArea.tsx
 import { Textarea } from "@/components";
 import { IconButton } from "@mui/material";
-import { Plus, SendHorizontal, Mic } from "lucide-react";
+import { Plus, SendHorizontal } from "lucide-react";
 import { useRef, useCallback, useEffect, useState } from "react";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 interface InputAreaProps {
   onSendMessage: (message: string) => Promise<void>;
@@ -11,46 +13,17 @@ interface InputAreaProps {
 function InputArea({ onSendMessage, isSending }: InputAreaProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState("");
-  const [isListening, setIsListening] = useState(false);
-  const recognitionRef = useRef<any | null>(null);
-  const messageRef = useRef("");
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+    useSpeechRecognition();
+
+  if (!browserSupportsSpeechRecognition) {
+    return <span>Browser doesn't support speech recognition.</span>;
+  }
 
   useEffect(() => {
-    const SpeechRecognition =
-      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = "en-US";
-
-      recognition.onresult = (event) => {
-        const results = event.results;
-        let transcript = "";
-        for (let i = event.resultIndex; i < results.length; i++) {
-          const result = results[i];
-          transcript += result[0].transcript;
-        }
-        setMessage((prev) => prev + transcript);
-        messageRef.current += transcript;
-      };
-
-      recognition.onerror = (event) => {
-        console.error("Speech recognition error:", (event as any).error);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-        if (messageRef.current.trim()) {
-          handleCreateMessage(messageRef.current);
-          setMessage("");
-          messageRef.current = "";
-        }
-      };
-
-      recognitionRef.current = recognition;
-    } else {
-      console.warn("Speech recognition not supported in this browser");
+    if (textareaRef.current) {
+      const initialHeight = window.innerHeight * 0.1;
+      textareaRef.current.style.height = `${initialHeight}px`;
     }
   }, []);
 
@@ -66,26 +39,13 @@ function InputArea({ onSendMessage, isSending }: InputAreaProps) {
     textarea.style.height = `${newHeight}px`;
   }, []);
 
-  const handleCreateMessage = async (msg: string) => {
-    if (!msg.trim() || isSending) return;
+  const handleCreateMessage = async () => {
+    if (!message.trim() || isSending) return;
     try {
-      await onSendMessage(msg);
+      await onSendMessage(message);
       setMessage("");
     } catch (error) {
       console.error("Failed to send message:", error);
-    }
-  };
-
-  const handleToggleListening = () => {
-    if (!recognitionRef.current) return;
-
-    if (isListening) {
-      recognitionRef.current.stop();
-    } else {
-      setMessage("");
-      messageRef.current = "";
-      recognitionRef.current.start();
-      setIsListening(true);
     }
   };
 
@@ -101,30 +61,19 @@ function InputArea({ onSendMessage, isSending }: InputAreaProps) {
         disabled={isSending}
       />
       <div className="flex justify-between items-center mt-2">
-        <div className="flex gap-2">
-          <IconButton
-            aria-label="Attach"
-            color="default"
-            className="hover:bg-[hsl(0,0%,18%)]"
-            disabled={isSending}
-          >
-            <Plus size={20} />
-          </IconButton>
-          <IconButton
-            aria-label={isListening ? "Stop recording" : "Start recording"}
-            color="default"
-            className="hover:bg-[hsl(0,0%,18%)]"
-            onClick={handleToggleListening}
-            disabled={isSending}
-          >
-            <Mic size={20} color={isListening ? "#ff0000" : "white"} />
-          </IconButton>
-        </div>
+        <IconButton
+          aria-label="Attach"
+          color="default"
+          className="hover:bg-[hsl(0,0%,18%)]"
+          disabled={isSending}
+        >
+          <Plus size={20} />
+        </IconButton>
         <IconButton
           aria-label="Send"
           color="success"
           className="hover:bg-[hsl(143,85%,36%)]"
-          onClick={() => handleCreateMessage(message)}
+          onClick={handleCreateMessage}
           disabled={isSending}
         >
           <SendHorizontal size={20} />

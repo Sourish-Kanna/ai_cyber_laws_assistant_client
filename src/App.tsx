@@ -387,7 +387,7 @@ const demoSession = {
 export default function DashboardLayoutAccountSidebar(props: DemoProps) {
   const { window } = props;
 
-  const [pathname, setPathname] = React.useState("/dashboard");
+  // const [pathname, setPathname] = React.useState("/dashboard");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -408,9 +408,11 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
     return {
       signIn: () => {
         setSession(demoSession);
+        navigate("/dashboard"); // Redirect after sign in
       },
       signOut: () => {
         setSession(null);
+        navigate("/login"); // Redirect after sign out
       },
     };
   }, []);

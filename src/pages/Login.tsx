@@ -4,6 +4,8 @@ import { decodeJwt } from "jose";
 import axios from "axios";
 import { Container, Typography, Button, Box, TextField, Grid, Link } from "@mui/material";
 
+const backendUrl = "http://localhost:8001";
+
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -20,20 +22,15 @@ function Login() {
   const handleSuccess = (credentialResponse: CredentialResponse) => {
     const { credential } = credentialResponse;
     if (!credential) return;
-
-    const decoded = decodeJwt(credential);
-    console.log("Decoded JWT:", decoded);
-
+  
     axios
-      .get("http://localhost:8001/api/v1/login/verify", {
-        headers: { Authorization: `Bearer ${credential}` },
-        withCredentials: true,
-      })
+      .post(`${backendUrl}/api/v1/login/google-login`, { credential }, { withCredentials: true })
       .then((response) => {
-        console.log("User verified:", response.data);
+        console.log("Google login success:", response.data);
+        localStorage.setItem("authToken", response.data.token);
       })
       .catch((error) => {
-        console.error("Verification failed:", error);
+        console.error("Google login failed:", error);
       });
   };
 
@@ -44,12 +41,12 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8001/api/v1/login", {
+      const response = await axios.post(`${backendUrl}/api/v1/login/email-login`, {
         email,
         password,
       });
-      console.log("Login Successful:", response.data);
-      // Store the token or handle post-login logic here
+      console.log("Email login success:", response.data);
+      localStorage.setItem("authToken", response.data.token);
     } catch (error: any) {
       setError(error.response?.data?.message || "Something went wrong");
     }

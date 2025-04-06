@@ -9,7 +9,7 @@ const Logout = () => {
     // Clear user session data from localStorage or cookies
     localStorage.removeItem("authToken"); // or clear cookies if used
     // Redirect to login page after logout
-    navigate("/login");
+    // navigate("/login");
   }, [navigate]);
 
   return (

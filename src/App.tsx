@@ -412,7 +412,7 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       },
       signOut: () => {
         setSession(null);
-        navigate("/login"); // Redirect after sign out
+        navigate("/logout"); // Redirect after sign out
       },
     };
   }, []);

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
-import { decodeJwt } from "jose";
 import axios from "axios";
+// import bcrypt from "bcryptjs";
 import { Container, Typography, Button, Box, TextField, Grid, Link } from "@mui/material";
 
-const backendUrl = "http://localhost:8001";
+const backendUrl = import.meta.env.VITE_BASE_SERVER_URL;
 
 function Login() {
   const [email, setEmail] = useState<string>("");
@@ -22,9 +22,9 @@ function Login() {
   const handleSuccess = (credentialResponse: CredentialResponse) => {
     const { credential } = credentialResponse;
     if (!credential) return;
-  
+
     axios
-      .post(`${backendUrl}/api/v1/login/google-login`, { credential }, { withCredentials: true })
+      .post(`${backendUrl}/auth/google`, { credential }, { withCredentials: true })
       .then((response) => {
         console.log("Google login success:", response.data);
         localStorage.setItem("authToken", response.data.token);
@@ -41,9 +41,10 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post(`${backendUrl}/api/v1/login/email-login`, {
+
+      const response = await axios.post(`${backendUrl}/auth/login`, {
         email,
-        password,
+        password: password, // Send the hashed password
       });
       console.log("Email login success:", response.data);
       localStorage.setItem("authToken", response.data.token);
@@ -110,7 +111,7 @@ function Login() {
       </Box>
 
       {/* Google Login - Centered */}
-      <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
         <GoogleLogin
           onSuccess={handleSuccess}
           onError={() => console.log("Login failed")}

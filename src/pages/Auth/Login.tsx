@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { Container, Typography, Button, Box, TextField, Grid, Link } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Container, Typography, Box, TextField, Grid, Link } from "@mui/material";
 
 const backendUrl = import.meta.env.VITE_BASE_SERVER_URL;
 
@@ -10,7 +11,7 @@ function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -27,60 +28,31 @@ function Login() {
     axios
       .post(`${backendUrl}/auth/google`, { credential }, { withCredentials: true })
       .then((response) => {
-        console.log("Google login success:", response.data);
         localStorage.setItem("authToken", response.data.token);
-
-        // Redirect to "/" after a delay
-        setTimeout(() => {
-          navigate("/");
-        }, 2000); // 2-second delay
+        setTimeout(() => navigate("/"), 2000);
       })
-      .catch((error) => {
-        console.error("Google login failed:", error);
-      });
+      .catch(() => setError("Google login failed."));
   };
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    // Clear any previous error
     setError("");
 
     try {
-      const response = await axios.post(`${backendUrl}/auth/login`, {
-        email,
-        password,
-      });
-      console.log("Email login success:", response.data);
+      const response = await axios.post(`${backendUrl}/auth/login`, { email, password });
       localStorage.setItem("authToken", response.data.token);
-
-      // Redirect to "/" after a delay
-      setTimeout(() => {
-        navigate("/");
-      }, 2000); // 2-second delay
-    } catch (error: any) {
-      setError(error.response?.data?.message || "Something went wrong");
+      setTimeout(() => navigate("/"), 2000);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Something went wrong.");
     }
   };
 
   return (
-    <Container
-      maxWidth="xs"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh", // Full screen height to center content vertically
-        mt: 5,
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
+    <Container className="flex flex-col items-center justify-center h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
+      <Typography variant="h4" className="mb-4 text-green-500">
         Login
       </Typography>
-
-      {/* Login Form */}
-      <Box component="form" onSubmit={handleLogin} sx={{ width: "100%", mt: 2 }}>
+      <Box component="form" onSubmit={handleLogin} className="w-full max-w-md">
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -91,9 +63,9 @@ function Login() {
               value={email}
               onChange={handleEmailChange}
               required
+              className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
             />
           </Grid>
-
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -103,41 +75,34 @@ function Login() {
               value={password}
               onChange={handlePasswordChange}
               required
+              className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
             />
           </Grid>
-
           {error && (
             <Grid item xs={12}>
               <Typography color="error">{error}</Typography>
             </Grid>
           )}
-
           <Grid item xs={12}>
-            <Button variant="contained" type="submit" fullWidth>
+            <Button type="submit" className="w-full bg-green-500 text-white hover:bg-green-600">
               Login
             </Button>
           </Grid>
         </Grid>
       </Box>
-
-      {/* Google Login - Centered */}
-      <Box sx={{ mt: 3, display: "flex", justifyContent: "center" }}>
+      <Box className="mt-4">
         <GoogleLogin
           onSuccess={handleSuccess}
-          onError={() => console.log("Login failed")}
+          onError={() => setError("Google login failed.")}
           useOneTap
         />
       </Box>
-
-      {/* Register Link */}
-      <Box sx={{ mt: 2 }}>
-        <Typography variant="body2" align="center">
-          Don't have an account?{" "}
-          <Link href="/register" underline="hover">
-            Register here
-          </Link>
-        </Typography>
-      </Box>
+      <Typography variant="body2" className="mt-4">
+        Don't have an account?{" "}
+        <Link href="/register" className="text-green-500 underline">
+          Register here
+        </Link>
+      </Typography>
     </Container>
   );
 }

@@ -1,23 +1,24 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Typography, Container } from "@mui/material";
+import { Button } from "@/components/ui/button";
+import { Container, Typography } from "@mui/material";
 
 const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Clear user session data from localStorage or cookies
-    localStorage.removeItem("authToken"); // or clear cookies if used
-    // Redirect to login page after logout
-    // navigate("/login");
-  }, [navigate]);
+    localStorage.removeItem("authToken");
+  }, []);
 
   return (
-    <Container sx={{ textAlign: "center", mt: 5 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container className="flex flex-col items-center justify-center h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
+      <Typography variant="h4" className="mb-4 text-green-500">
         You have been logged out
       </Typography>
-      <Button variant="contained" onClick={() => navigate("/login")}>
+      <Button
+        onClick={() => navigate("/login")}
+        className="w-full max-w-xs bg-green-500 text-white hover:bg-green-600"
+      >
         Go to Login
       </Button>
     </Container>

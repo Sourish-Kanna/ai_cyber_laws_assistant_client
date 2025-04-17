@@ -28,12 +28,21 @@ function Login() {
 
   const google_login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      const { access_token } = tokenResponse;
-      // console.log("credential", access_token);
+      const { access_token } = tokenResponse; // Extract the access token
+      console.log(`Access Token: ${access_token}`); // Log the access token
+
       try {
+        // Exchange the access token for an ID token
+        const tokenInfoResponse = await axios.get(
+          `https://oauth2.googleapis.com/tokeninfo?access_token=${access_token}`
+        );
+        const id_token = tokenInfoResponse.data.id_token; // Extract the ID token
+        console.log(`ID Token: ${id_token}`); // Log the ID token
+
+        // Send the ID token to the backend
         const response = await axios.post(
           `${backendUrl}/auth/google`,
-          { credential: access_token },
+          { credential: id_token },
           { withCredentials: true }
         );
         localStorage.setItem("authToken", response.data.token);
@@ -43,7 +52,7 @@ function Login() {
       }
     },
     onError: () => setError("Google login failed."),
-    flow: "implicit",
+    scope: "openid email profile", // Request OpenID scope to get the ID Token
   });
 
   return (

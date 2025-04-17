@@ -50,7 +50,7 @@ const router = createBrowserRouter([
   // }
 ]);
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-console.log("Google Client ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
+// console.log("Google Client ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
 
 createRoot(document.getElementById("root")!).render(
   <GoogleOAuthProvider clientId={clientId}>

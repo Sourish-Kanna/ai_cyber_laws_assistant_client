@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Typography, Box, TextField, Grid, Link, Button } from "@mui/material";
@@ -26,23 +26,14 @@ function Login() {
     }
   };
 
-  const google_login = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      const { access_token } = tokenResponse; // Extract the access token
-      console.log(`Access Token: ${access_token}`); // Log the access token
-
+  const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    const { credential } = credentialResponse; // Extract the ID token
+    if (credential) {
+      // console.log(`ID Token: ${credential}`); // Log the ID token
       try {
-        // Exchange the access token for an ID token
-        const tokenInfoResponse = await axios.get(
-          `https://oauth2.googleapis.com/tokeninfo?access_token=${access_token}`
-        );
-        const id_token = tokenInfoResponse.data.id_token; // Extract the ID token
-        console.log(`ID Token: ${id_token}`); // Log the ID token
-
-        // Send the ID token to the backend
         const response = await axios.post(
           `${backendUrl}/auth/google`,
-          { credential: id_token },
+          { credential },
           { withCredentials: true }
         );
         localStorage.setItem("authToken", response.data.token);
@@ -50,10 +41,14 @@ function Login() {
       } catch (err: any) {
         setError(err.response?.data?.message || "Google login failed.");
       }
-    },
-    onError: () => setError("Google login failed."),
-    scope: "openid email profile", // Request OpenID scope to get the ID Token
-  });
+    } else {
+      setError("Google login failed: No credential received.");
+    }
+  };
+
+  const handleGoogleLoginError = () => {
+    setError("Google login failed.");
+  };
 
   return (
     <AppProvider theme={demoTheme}>
@@ -98,33 +93,10 @@ function Login() {
           </Grid>
         </Box>
         <Box className="mt-4 mb-4">
-          <Button
-            variant="outlined"
-            onClick={() => {
-              google_login();
-              console.log("Google login initiated");
-            }}
-            fullWidth
-            startIcon={
-              <img
-                src="https://developers.google.com/identity/images/g-logo.png"
-                alt="Google"
-                style={{ height: 20, width: 20 }}
-              />
-            }
-            sx={{
-              textTransform: "none",
-              backgroundColor: "#fff",
-              color: "#000",
-              borderColor: "#ccc",
-              "&:hover": {
-                backgroundColor: "#f7f7f7",
-                borderColor: "#aaa",
-              },
-            }}
-          >
-            Sign in with Google
-          </Button>
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+          />
         </Box>
         <Typography variant="body2" className="mt-4">
           Don't have an account?{" "}

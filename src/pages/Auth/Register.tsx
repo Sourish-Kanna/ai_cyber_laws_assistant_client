@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Container, Typography, Box, TextField, Grid, Link, Button } from "@mui/material";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { demoTheme } from "@/Theme";
 
@@ -27,13 +27,14 @@ const Register = () => {
     }
   };
 
-  const login = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      const { access_token } = tokenResponse;
+  const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
+    const { credential } = credentialResponse; // Extract the ID token
+    if (credential) {
+      // console.log(`ID Token: ${credential}`); // Log the ID token
       try {
         const response = await axios.post(
           `${backendUrl}/auth/google`,
-          { credential: access_token },
+          { credential },
           { withCredentials: true }
         );
         localStorage.setItem("authToken", response.data.token);
@@ -41,10 +42,10 @@ const Register = () => {
       } catch (err: any) {
         setError(err.response?.data?.message || "Google login failed.");
       }
-    },
-    onError: () => setError("Google login failed."),
-    flow: "implicit",
-  });
+    } else {
+      setError("Google login failed: No credential received.");
+    }
+  };
 
   return (
     <AppProvider theme={demoTheme}>
@@ -103,29 +104,10 @@ const Register = () => {
             </Grid>
           </Grid>
         </Box>
-        <Button
-          variant="outlined"
-          onClick={() => login()}
-          startIcon={
-            <img
-              src="https://developers.google.com/identity/images/g-logo.png"
-              alt="Google"
-              style={{ height: 20, width: 20 }}
-            />
-          }
-          sx={{
-            textTransform: "none",
-            backgroundColor: "#fff",
-            color: "#000",
-            borderColor: "#ccc",
-            "&:hover": {
-              backgroundColor: "#f7f7f7",
-              borderColor: "#aaa",
-            },
-          }}
-        >
-          Sign in with Google
-        </Button>
+        <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={() => setError("Google login failed.")}
+          />
         <Typography variant="body2" className="mt-4">
           Already have an account?{" "}
           <Link href="/login" className="underline">

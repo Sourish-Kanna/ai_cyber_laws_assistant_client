@@ -46,10 +46,6 @@ function Login() {
     }
   };
 
-  const handleGoogleLoginError = () => {
-    setError("Google login failed.");
-  };
-
   return (
     <AppProvider theme={demoTheme}>
       <Container className="flex flex-col items-center justify-center h-screen">
@@ -95,7 +91,7 @@ function Login() {
         <Box className="mt-4 mb-4">
           <GoogleLogin
             onSuccess={handleGoogleLoginSuccess}
-            onError={handleGoogleLoginError}
+            onError={() => setError("Google login failed.")}
           />
         </Box>
         <Typography variant="body2" className="mt-4">

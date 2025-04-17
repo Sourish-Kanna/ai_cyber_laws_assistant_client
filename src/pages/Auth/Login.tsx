@@ -13,7 +13,7 @@ function Login() {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleLogin = async (event: React.FormEvent) => {
+  const email_login = async (event: React.FormEvent) => {
     event.preventDefault();
     setError("");
 
@@ -26,9 +26,10 @@ function Login() {
     }
   };
 
-  const login = useGoogleLogin({
+  const google_login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const { access_token } = tokenResponse;
+      // console.log("credential", access_token);
       try {
         const response = await axios.post(
           `${backendUrl}/auth/google`,
@@ -37,8 +38,8 @@ function Login() {
         );
         localStorage.setItem("authToken", response.data.token);
         setTimeout(() => navigate("/"), 2000);
-      } catch {
-        setError("Google login failed.");
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Google login failed.");
       }
     },
     onError: () => setError("Google login failed."),
@@ -51,7 +52,7 @@ function Login() {
         <Typography variant="h4" className="mb-4">
           Login
         </Typography>
-        <Box component="form" onSubmit={handleLogin} className="w-full max-w-md mt-4">
+        <Box component="form" onSubmit={email_login} className="w-full max-w-md mt-4">
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -90,7 +91,10 @@ function Login() {
         <Box className="mt-4 mb-4">
           <Button
             variant="outlined"
-            onClick={() => login()}
+            onClick={() => {
+              google_login();
+              console.log("Google login initiated");
+            }}
             fullWidth
             startIcon={
               <img

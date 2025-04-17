@@ -45,6 +45,8 @@ import {
 import { green } from "@mui/material/colors";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import {demoTheme} from "@/Theme";
+
 // import type { Router, Session } from "@toolpad/core/AppProvider";
 // import { SidebarFooter } from "./components/ui/sidebar";
 
@@ -94,42 +96,43 @@ const NAVIGATION: Navigation = [
   },
 ];
 
-const demoTheme = createTheme({
-  cssVariables: {
-    colorSchemeSelector: "data-toolpad-color-scheme",
-  },
-  colorSchemes: {
-    light: {
-      palette: {
-        primary: {
-          main: green[500],
-          light: green[300],
-          dark: green[700],
-          contrastText: "#fff",
-        },
-      },
-    },
-    dark: {
-      palette: {
-        primary: {
-          main: green[700],
-          light: green[500],
-          dark: green[900],
-          contrastText: "#fff",
-        },
-      },
-    },
-  },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 600,
-      lg: 1200,
-      xl: 1536,
-    },
-  },
-});
+// const demoTheme = createTheme({
+//   spacing: 8, 
+//   cssVariables: {
+//     colorSchemeSelector: "data-toolpad-color-scheme",
+//   },
+//   colorSchemes: {
+//     light: {
+//       palette: {
+//         primary: {
+//           main: green[500],
+//           light: green[300],
+//           dark: green[700],
+//           contrastText: "#fff",
+//         },
+//       },
+//     },
+//     dark: {
+//       palette: {
+//         primary: {
+//           main: green[700],
+//           light: green[500],
+//           dark: green[900],
+//           contrastText: "#fff",
+//         },
+//       },
+//     },
+//   },
+//   breakpoints: {
+//     values: {
+//       xs: 0,
+//       sm: 600,
+//       md: 600,
+//       lg: 1200,
+//       xl: 1536,
+//     },
+//   },
+// });
 
 function DemoPageContent({ pathname }: { pathname: string }) {
   return (

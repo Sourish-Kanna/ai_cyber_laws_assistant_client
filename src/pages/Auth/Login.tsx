@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin  } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Container, Typography, Box, TextField, Grid, Link } from "@mui/material";
+import { Container, Typography, Box, TextField, Grid, Link, Button } from "@mui/material";
+import { AppProvider } from "@toolpad/core/AppProvider";
+import { demoTheme } from "@/Theme";
+
 
 const backendUrl = import.meta.env.VITE_BASE_SERVER_URL;
 
@@ -21,19 +23,6 @@ function Login() {
     setPassword(event.target.value);
   };
 
-  const handleSuccess = (credentialResponse: CredentialResponse) => {
-    const { credential } = credentialResponse;
-    if (!credential) return;
-
-    axios
-      .post(`${backendUrl}/auth/google`, { credential }, { withCredentials: true })
-      .then((response) => {
-        localStorage.setItem("authToken", response.data.token);
-        setTimeout(() => navigate("/"), 2000);
-      })
-      .catch(() => setError("Google login failed."));
-  };
-
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setError("");
@@ -47,12 +36,32 @@ function Login() {
     }
   };
 
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const { access_token } = tokenResponse;
+      try {
+        const response = await axios.post(
+          `${backendUrl}/auth/google`,
+          { access_token },
+          { withCredentials: true }
+        );
+        localStorage.setItem("authToken", response.data.token);
+        setTimeout(() => navigate("/"), 2000);
+      } catch {
+        setError("Google login failed.");
+      }
+    },
+    onError: () => setError("Google login failed."),
+    flow: "implicit",
+  });
+
   return (
-    <Container className="flex flex-col items-center justify-center h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
-      <Typography variant="h4" className="mb-4 text-green-500">
+    <AppProvider theme={demoTheme}>
+    <Container className="flex flex-col items-center justify-center h-screen">
+      <Typography variant="h4" className="mb-4">
         Login
       </Typography>
-      <Box component="form" onSubmit={handleLogin} className="w-full max-w-md">
+      <Box component="form" onSubmit={handleLogin} className="w-full max-w-md mt-4">
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -63,7 +72,6 @@ function Login() {
               value={email}
               onChange={handleEmailChange}
               required
-              className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
             />
           </Grid>
           <Grid item xs={12}>
@@ -75,7 +83,6 @@ function Login() {
               value={password}
               onChange={handlePasswordChange}
               required
-              className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
             />
           </Grid>
           {error && (
@@ -84,26 +91,53 @@ function Login() {
             </Grid>
           )}
           <Grid item xs={12}>
-            <Button type="submit" className="w-full bg-green-500 text-white hover:bg-green-600">
+          <Button type="submit" fullWidth variant="contained" 
+          sx={{
+            mt: 2,  
+            fontWeight: 'bold',  
+            backgroundColor: '#00C853',
+            color: '#fff',  
+            '&:hover': {backgroundColor: '#00B44D',},
+            }}>
               Login
             </Button>
           </Grid>
         </Grid>
       </Box>
-      <Box className="mt-4">
-        <GoogleLogin
-          onSuccess={handleSuccess}
-          onError={() => setError("Google login failed.")}
-          useOneTap
-        />
+      <Box className="mt-4 mb-4">
+          <Button
+            variant="outlined"
+            onClick={() => login()}
+            fullWidth
+            startIcon={
+              <img
+                src="https://developers.google.com/identity/images/g-logo.png"
+                alt="Google"
+                style={{ height: 20, width: 20 }}
+              />
+            }
+            sx={{
+              textTransform: "none",
+              backgroundColor: "#fff",
+              color: "#000",
+              borderColor: "#ccc",
+              '&:hover': {
+                backgroundColor: "#f7f7f7",
+                borderColor: "#aaa",
+              },
+            }}
+          >
+            Sign in with Google
+        </Button>
       </Box>
       <Typography variant="body2" className="mt-4">
         Don't have an account?{" "}
-        <Link href="/register" className="text-green-500 underline">
+        <Link href="/register" className="underline">
           Register here
         </Link>
       </Typography>
     </Container>
+    </AppProvider>
   );
 }
 

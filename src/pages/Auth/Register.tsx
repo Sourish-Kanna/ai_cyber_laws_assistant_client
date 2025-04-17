@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button } from "@/components/ui/button";
-import { Container, Typography, Box, TextField, Grid, Link } from "@mui/material";
-import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { Container, Typography, Box, TextField, Grid, Link, Button } from "@mui/material";
+import { useGoogleLogin  } from "@react-oauth/google";
+import { AppProvider } from "@toolpad/core/AppProvider";
+import { demoTheme } from "@/Theme";
 
 const backendUrl = import.meta.env.VITE_BASE_SERVER_URL;
 
@@ -32,25 +33,32 @@ const Register = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
-    const { credential } = credentialResponse;
-    if (!credential) return;
-
-    try {
-      await axios.post(`${backendUrl}/auth/google`, { credential }, { withCredentials: true });
-      setSuccess("Google registration successful! Redirecting...");
-      setTimeout(() => (window.location.href = "/"), 2000);
-    } catch {
-      setError("Google registration failed.");
-    }
-  };
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const { access_token } = tokenResponse;
+      try {
+        const response = await axios.post(
+          `${backendUrl}/auth/google`,
+          { access_token },
+          { withCredentials: true }
+        );
+        localStorage.setItem("authToken", response.data.token);
+        setTimeout(() => (window.location.href = "/login"), 2000);
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Google login failed.");
+      }
+    },
+    onError: () => setError("Google login failed."),
+    flow: "implicit", // or "auth-code" if your backend expects it
+  });
 
   return (
-    <Container className="flex flex-col items-center justify-center h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
-      <Typography variant="h4" className="mb-4 text-green-500">
+    <AppProvider theme={demoTheme}>
+    <Container className="flex flex-col items-center justify-center h-screen">
+      <Typography variant="h4" className="mb-4">
         Register
       </Typography>
-      <Box component="form" onSubmit={handleRegister} className="w-full max-w-md">
+      <Box component="form" onSubmit={handleRegister} className="w-full max-w-md mt-4 mb-4">
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -61,7 +69,6 @@ const Register = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
             />
           </Grid>
           <Grid item xs={12}>
@@ -73,7 +80,6 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
             />
           </Grid>
           <Grid item xs={12}>
@@ -85,7 +91,6 @@ const Register = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="bg-gray-100 dark:bg-gray-800 text-black dark:text-white"
             />
           </Grid>
           {error && (
@@ -99,26 +104,51 @@ const Register = () => {
             </Grid>
           )}
           <Grid item xs={12}>
-            <Button type="submit" className="w-full bg-green-500 text-white hover:bg-green-600">
+            <Button type="submit" fullWidth variant="contained" 
+            sx={{
+              mt: 2,  
+              fontWeight: 'bold',  
+              backgroundColor: '#00C853',
+              color: '#fff',  
+              '&:hover': {backgroundColor: '#00B44D',},
+              }}>
               Register
             </Button>
           </Grid>
         </Grid>
       </Box>
-      <Box className="mt-4">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => setError("Google registration failed.")}
-          useOneTap
-        />
-      </Box>
+      <Button
+          variant="outlined"
+          onClick={() => login()}
+          // fullWidth
+          startIcon={
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="Google"
+              style={{ height: 20, width: 20 }}
+            />
+          }
+          sx={{
+            textTransform: "none",
+            backgroundColor: "#fff",
+            color: "#000",
+            borderColor: "#ccc",
+            '&:hover': {
+              backgroundColor: "#f7f7f7",
+              borderColor: "#aaa",
+            },
+          }}
+        >
+          Sign in with Google
+      </Button>
       <Typography variant="body2" className="mt-4">
         Already have an account?{" "}
-        <Link href="/login" className="text-green-500 underline">
+        <Link href="/login" className="underline">
           Login here
         </Link>
       </Typography>
     </Container>
+    </AppProvider>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Container, Typography, Box, TextField, Grid, Link, Button } from "@mui/material";
-import { useGoogleLogin  } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { demoTheme } from "@/Theme";
 
@@ -9,8 +9,7 @@ const backendUrl = import.meta.env.VITE_BASE_SERVER_URL;
 
 const Register = () => {
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
@@ -19,13 +18,8 @@ const Register = () => {
     setError("");
     setSuccess("");
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
     try {
-      await axios.post(`${backendUrl}/auth/register`, { email, password });
+      await axios.post(`${backendUrl}/auth/register`, { email, name });
       setSuccess("Registration successful! Redirecting...");
       setTimeout(() => (window.location.href = "/login"), 2000);
     } catch (err: any) {
@@ -39,7 +33,7 @@ const Register = () => {
       try {
         const response = await axios.post(
           `${backendUrl}/auth/google`,
-          { access_token },
+          { credential: access_token },
           { withCredentials: true }
         );
         localStorage.setItem("authToken", response.data.token);
@@ -49,78 +43,69 @@ const Register = () => {
       }
     },
     onError: () => setError("Google login failed."),
-    flow: "implicit", // or "auth-code" if your backend expects it
+    flow: "implicit",
   });
 
   return (
     <AppProvider theme={demoTheme}>
-    <Container className="flex flex-col items-center justify-center h-screen">
-      <Typography variant="h4" className="mb-4">
-        Register
-      </Typography>
-      <Box component="form" onSubmit={handleRegister} className="w-full max-w-md mt-4 mb-4">
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Email"
-              variant="outlined"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Password"
-              variant="outlined"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Confirm Password"
-              variant="outlined"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </Grid>
-          {error && (
+      <Container className="flex flex-col items-center justify-center h-screen">
+        <Typography variant="h4" className="mb-4">
+          Register
+        </Typography>
+        <Box component="form" onSubmit={handleRegister} className="w-full max-w-md mt-4 mb-4">
+          <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography color="error">{error}</Typography>
+              <TextField
+                fullWidth
+                label="Name"
+                variant="outlined"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
             </Grid>
-          )}
-          {success && (
             <Grid item xs={12}>
-              <Typography color="primary">{success}</Typography>
+              <TextField
+                fullWidth
+                label="Email"
+                variant="outlined"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </Grid>
-          )}
-          <Grid item xs={12}>
-            <Button type="submit" fullWidth variant="contained" 
-            sx={{
-              mt: 2,  
-              fontWeight: 'bold',  
-              backgroundColor: '#00C853',
-              color: '#fff',  
-              '&:hover': {backgroundColor: '#00B44D',},
-              }}>
-              Register
-            </Button>
+            {error && (
+              <Grid item xs={12}>
+                <Typography color="error">{error}</Typography>
+              </Grid>
+            )}
+            {success && (
+              <Grid item xs={12}>
+                <Typography color="primary">{success}</Typography>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  fontWeight: "bold",
+                  backgroundColor: "#00C853",
+                  color: "#fff",
+                  "&:hover": { backgroundColor: "#00B44D" },
+                }}
+              >
+                Register
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-      <Button
+        </Box>
+        <Button
           variant="outlined"
           onClick={() => login()}
-          // fullWidth
           startIcon={
             <img
               src="https://developers.google.com/identity/images/g-logo.png"
@@ -133,21 +118,21 @@ const Register = () => {
             backgroundColor: "#fff",
             color: "#000",
             borderColor: "#ccc",
-            '&:hover': {
+            "&:hover": {
               backgroundColor: "#f7f7f7",
               borderColor: "#aaa",
             },
           }}
         >
           Sign in with Google
-      </Button>
-      <Typography variant="body2" className="mt-4">
-        Already have an account?{" "}
-        <Link href="/login" className="underline">
-          Login here
-        </Link>
-      </Typography>
-    </Container>
+        </Button>
+        <Typography variant="body2" className="mt-4">
+          Already have an account?{" "}
+          <Link href="/login" className="underline">
+            Login here
+          </Link>
+        </Typography>
+      </Container>
     </AppProvider>
   );
 };

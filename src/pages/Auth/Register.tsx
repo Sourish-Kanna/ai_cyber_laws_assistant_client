@@ -43,7 +43,7 @@ const Register = () => {
           { withCredentials: true }
         );
         localStorage.setItem("authToken", response.data.token);
-        setTimeout(() => (window.location.href = "/login"), 2000);
+        setTimeout(() => (window.location.href = "/"), 2000);
       } catch (err: any) {
         setError(err.response?.data?.message || "Google login failed.");
       }

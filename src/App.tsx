@@ -7,6 +7,8 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DescriptionIcon from "@mui/icons-material/Description";
 import LayersIcon from "@mui/icons-material/Layers";
+import NewspaperIcon from "@mui/icons-material/Newspaper";
+// import * as pages from "./index"
 import {
   AppProvider,
   Router,
@@ -64,6 +66,11 @@ const NAVIGATION: Navigation = [
     segment: "chatbot",
     title: "Chat Bot",
     icon: <SmartToyIcon />,
+  },
+  {
+    segment:"cyber-news",
+    title:"CyberNews",
+    icon:<NewspaperIcon/>
   },
   {
     kind: "divider",

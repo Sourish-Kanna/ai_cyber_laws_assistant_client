@@ -30,6 +30,10 @@ const router = createBrowserRouter([
         path: routes.DASHBOARD,
         element: <Pages.Dashboard />,
       },
+      {
+        path: routes.USER_PROFILE,
+        element: <Pages.UserProfile />,
+      },
     ],
   },
   {

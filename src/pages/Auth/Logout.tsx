@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Container, Typography } from "@mui/material";
+import { Container, Typography, Button } from "@mui/material";
+import { AppProvider } from "@toolpad/core/AppProvider";
+import { demoTheme } from "@/Theme";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -11,17 +12,27 @@ const Logout = () => {
   }, []);
 
   return (
-    <Container className="flex flex-col items-center justify-center h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
-      <Typography variant="h4" className="mb-4 text-green-500">
+    <AppProvider theme={demoTheme}>
+    <Container className="flex flex-col items-center justify-center h-screen">
+      <Typography variant="h4" sx={{ mb: 4 }}>
         You have been logged out
       </Typography>
       <Button
-        onClick={() => navigate("/login")}
-        className="w-full max-w-xs bg-green-500 text-white hover:bg-green-600"
-      >
+          onClick={() => navigate("/login")}
+          // fullWidth
+          variant="contained"
+          sx={{
+            mt: 2,
+            fontWeight: "bold",
+            backgroundColor: "#00C853",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#00B44D" },
+          }}
+        >
         Go to Login
       </Button>
     </Container>
+    </AppProvider>
   );
 };
 

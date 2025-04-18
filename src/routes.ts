@@ -5,5 +5,15 @@ const CHATPAGE = ":chat_section_id";
 const LOGIN = "/login";
 const LOGOUT = "/logout";
 const REGISTER = "/register";
+const USER_PROFILE = "/user-profile"; 
 
-export { CHATBOT, DASHBOARD, MAINDASHBOARD, CHATPAGE, LOGIN, LOGOUT, REGISTER };
+export {
+  CHATBOT,
+  DASHBOARD,
+  MAINDASHBOARD,
+  CHATPAGE,
+  LOGIN,
+  LOGOUT,
+  REGISTER,
+  USER_PROFILE, 
+};

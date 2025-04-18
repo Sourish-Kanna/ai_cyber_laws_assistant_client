@@ -11,4 +11,5 @@ export { default as Chats } from "./pages/ChatBot/Chats.tsx";
 export { default as Login } from "./pages/Auth/Login.tsx";
 export { default as Logout } from "./pages/Auth/Logout.tsx";
 export { default as Register } from "./pages/Auth/Register.tsx";
+export { default as CyberNews } from "./pages/CyberNews.tsx";
 export { default as UserProfile } from "./pages/ChatBot/UserProfile.tsx";

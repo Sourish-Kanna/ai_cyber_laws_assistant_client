@@ -68,7 +68,7 @@ const NAVIGATION: Navigation = [
     icon: <SmartToyIcon />,
   },
   {
-    segment:"cyber-news",
+    segment:"cybernews",
     title:"CyberNews",
     icon:<NewspaperIcon/>
   },

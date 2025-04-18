@@ -34,6 +34,10 @@ const router = createBrowserRouter([
         path: routes.USER_PROFILE,
         element: <Pages.UserProfile />,
       },
+      {
+        path: routes.CYBERNEWS,
+        element: <Pages.CyberNews />,
+      },
     ],
   },
   {

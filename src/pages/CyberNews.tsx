@@ -8,7 +8,8 @@ import {
   CardContent,
   CardActions,
   Button,
-  CircularProgress
+  CircularProgress,
+  Box
 } from "@mui/material";
 
 interface Article {
@@ -17,23 +18,28 @@ interface Article {
   url: string;
   source: { name: string };
   publishedAt: string;
+  urlToImage?: string;
 }
 
 const CyberNews: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articlesWithImages, setArticlesWithImages] = useState<Article[]>([]);
+  const [articlesWithoutImages, setArticlesWithoutImages] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchNews = async () => {
     try {
-      const response = await axios.get("https://gnews.io/api/v4/search", {
+      const response = await axios.get("https://newsapi.org/v2/everything", {
         params: {
           q: "cybersecurity OR cyber attack",
-          lang: "en",
-          max: 10,
-          token: import.meta.env.VITE_GNEWS_API_KEY
+          language: "en",
+          pageSize: 30,
+          apiKey: "2d666387864d400f90c610591acd27b3"
         }
       });
-      setArticles(response.data.articles);
+
+      const articles = response.data.articles;
+      setArticlesWithImages(articles.filter((a: Article) => a.urlToImage));
+      setArticlesWithoutImages(articles.filter((a: Article) => !a.urlToImage));
     } catch (error) {
       console.error("Error fetching cyber news:", error);
     } finally {
@@ -46,37 +52,159 @@ const CyberNews: React.FC = () => {
   }, []);
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Latest Cybersecurity News
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+        Cybersecurity News
       </Typography>
+
+      {/* Top Dynamic Scroll Section */}
+      <Typography variant="h6" gutterBottom>
+        Latest News
+      </Typography>
+
+      <Box
+        sx={{
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+          mb: 4,
+          position: "relative",
+          border: "1px solid #ccc",
+          borderRadius: "8px",
+          background: "#f9f9f9",
+          p: 2
+        }}
+      >
+        <Box
+          sx={{
+            display: "inline-block",
+            minWidth: "100%",
+            animation: "scroll 25s linear infinite",
+            willChange: "transform"
+          }}
+        >
+          {articlesWithoutImages.slice(0, 5).map((article, idx) => (
+            <Box
+              key={idx}
+              sx={{
+                display: "inline-block",
+                minWidth: "300px",
+                mx: 2
+              }}
+            >
+              <Typography variant="subtitle1" fontWeight="bold">
+                {article.title}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {article.source.name} — {new Date(article.publishedAt).toLocaleString()}
+              </Typography>
+            </Box>
+          ))}
+        </Box>
+      </Box>
 
       {loading ? (
         <CircularProgress />
       ) : (
         <Grid container spacing={3}>
-          {articles.map((article, idx) => (
-            <Grid item xs={12} sm={6} key={idx}>
-              <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {article.title}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" display="block" gutterBottom>
-                    {article.source.name} — {new Date(article.publishedAt).toLocaleString()}
-                  </Typography>
-                  <Typography variant="body2">{article.description}</Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small" href={article.url} target="_blank" rel="noopener noreferrer">
-                    Read More
-                  </Button>
-                </CardActions>
-              </Card>
+          {/* Main Section */}
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={3}>
+              {articlesWithImages.slice(0, 4).map((article, idx) => (
+                <Grid item xs={12} sm={6} key={idx}>
+                  <Card
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                      "&:hover": {
+                        transform: "scale(1.02)",
+                        boxShadow: 6
+                      }
+                    }}
+                  >
+                    <img
+                      src={article.urlToImage}
+                      alt={article.title}
+                      style={{ width: "100%", height: 180, objectFit: "cover" }}
+                    />
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {article.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {article.description}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        size="small"
+                        href={article.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Read More
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
-          ))}
+          </Grid>
+
+          {/* Side Section */}
+          <Grid item xs={12} md={4}>
+            <Typography variant="h6" gutterBottom>
+              Hot Topics
+            </Typography>
+            <Grid container spacing={2}>
+              {articlesWithImages.slice(4, 8).map((article, idx) => (
+                <Grid item xs={12} key={idx}>
+                  <Card
+                    sx={{
+                      display: "flex",
+                      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                      "&:hover": {
+                        transform: "scale(1.02)",
+                        boxShadow: 4
+                      }
+                    }}
+                  >
+                    <img
+                      src={article.urlToImage}
+                      alt={article.title}
+                      style={{ width: 100, height: "100%", objectFit: "cover" }}
+                    />
+                    <Box sx={{ p: 2 }}>
+                      <Typography variant="subtitle1" gutterBottom>
+                        {article.title}
+                      </Typography>
+                      <Button
+                        size="small"
+                        href={article.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Read
+                      </Button>
+                    </Box>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
         </Grid>
       )}
+
+      {/* CSS Keyframes for scrolling */}
+      <style>
+        {`
+          @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+          }
+        `}
+      </style>
     </Container>
   );
 };

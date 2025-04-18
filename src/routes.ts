@@ -5,8 +5,8 @@ const CHATPAGE = ":chat_section_id";
 const LOGIN = "/login";
 const LOGOUT = "/logout";
 const REGISTER = "/register";
-const USER_PROFILE = "/user-profile"; 
-
+const USER_PROFILE = "/user-profile";
+const CYBERNEWS = "/cybernews";
 export {
   CHATBOT,
   DASHBOARD,
@@ -15,5 +15,6 @@ export {
   LOGIN,
   LOGOUT,
   REGISTER,
-  USER_PROFILE, 
+  USER_PROFILE,
+  CYBERNEWS
 };

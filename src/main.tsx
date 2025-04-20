@@ -38,6 +38,11 @@ const router = createBrowserRouter([
         path: routes.CYBERNEWS,
         element: <Pages.CyberNews />,
       },
+      {
+        path: routes.CYBERHEALTH,
+        element: <Pages.CyberHealth />,
+      },
+
     ],
   },
   {

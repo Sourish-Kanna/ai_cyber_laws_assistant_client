@@ -46,6 +46,8 @@ import {
 } from "@toolpad/core/Account";
 import { green } from "@mui/material/colors";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
+import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
+
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {demoTheme} from "@/Theme";
 
@@ -55,29 +57,34 @@ import {demoTheme} from "@/Theme";
 const NAVIGATION: Navigation = [
   {
     kind: "header",
-    title: "Main items",
+    title: "Main items"
   },
   {
     segment: "dashboard",
     title: "Dashboard",
-    icon: <DashboardIcon />,
+    icon: <DashboardIcon />
   },
   {
     segment: "chatbot",
     title: "Chat Bot",
-    icon: <SmartToyIcon />,
+    icon: <SmartToyIcon />
   },
   {
-    segment:"cybernews",
-    title:"CyberNews",
-    icon:<NewspaperIcon/>
+    segment: "cybernews",
+    title: "Cyber News",
+    icon: <NewspaperIcon />
   },
   {
-    kind: "divider",
+    segment: "cyberhealth",
+    title: "Cyber Health",
+    icon: <HealthAndSafetyIcon />
+  },
+  {
+    kind: "divider"
   },
   {
     kind: "header",
-    title: "Analytics",
+    title: "Analytics"
   },
   {
     segment: "reports",
@@ -87,20 +94,20 @@ const NAVIGATION: Navigation = [
       {
         segment: "history",
         title: "History",
-        icon: <DescriptionIcon />,
+        icon: <DescriptionIcon />
       },
       {
         segment: "traffic",
         title: "Traffic",
-        icon: <DescriptionIcon />,
-      },
-    ],
+        icon: <DescriptionIcon />
+      }
+    ]
   },
   {
     segment: "integrations",
     title: "Integrations",
-    icon: <LayersIcon />,
-  },
+    icon: <LayersIcon />
+  }
 ];
 
 // const demoTheme = createTheme({

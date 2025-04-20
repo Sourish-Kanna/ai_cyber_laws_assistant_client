@@ -7,6 +7,7 @@ const LOGOUT = "/logout";
 const REGISTER = "/register";
 const USER_PROFILE = "/user-profile";
 const CYBERNEWS = "/cybernews";
+const CYBERHEALTH = "/cyberhealth";
 export {
   CHATBOT,
   DASHBOARD,
@@ -16,5 +17,6 @@ export {
   LOGOUT,
   REGISTER,
   USER_PROFILE,
-  CYBERNEWS
+  CYBERNEWS,
+  CYBERHEALTH
 };

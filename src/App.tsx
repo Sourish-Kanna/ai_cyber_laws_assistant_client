@@ -80,6 +80,11 @@ const NAVIGATION: Navigation = [
     icon: <HealthAndSafetyIcon />
   },
   {
+    segment: "community",
+    title: "Community",
+    icon: <CloudCircleIcon />
+  },
+  {
     kind: "divider"
   },
   {

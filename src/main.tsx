@@ -42,7 +42,10 @@ const router = createBrowserRouter([
         path: routes.CYBERHEALTH,
         element: <Pages.CyberHealth />,
       },
-
+      {
+        path: routes.COMMUNITY_TAB,
+        element: <Pages.CommunityTab />,
+      },
     ],
   },
   {

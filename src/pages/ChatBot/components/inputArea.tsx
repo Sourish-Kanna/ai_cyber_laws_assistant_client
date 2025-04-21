@@ -3,6 +3,7 @@ import { Textarea } from "@/components";
 import { IconButton } from "@mui/material";
 import { Plus, SendHorizontal } from "lucide-react";
 import { useRef, useCallback, useEffect, useState } from "react";
+import { useTheme } from "@mui/material/styles";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 interface InputAreaProps {
@@ -11,6 +12,7 @@ interface InputAreaProps {
 }
 
 function InputArea({ onSendMessage, isSending }: InputAreaProps) {
+  const theme = useTheme(); // Access the MUI theme
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState("");
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
@@ -50,31 +52,62 @@ function InputArea({ onSendMessage, isSending }: InputAreaProps) {
   };
 
   return (
-    <div className="relative p-2 bg-[hsl(0,0%,12%)] rounded-xl max-w-[50vw] min-w-[50vw] transition-all duration-200">
+    <div
+      style={{
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+        borderRadius: theme.shape.borderRadius,
+        padding: theme.spacing(0.5),
+        maxWidth: "50vw",
+        minWidth: "50vw",
+        maxHeight: "30vh",
+        minHeight: "10vh",
+        // overflowY: "auto",
+        transition: "all 0.2s",
+      }}
+    >
       <Textarea
         ref={textareaRef}
         onInput={handleInput}
         onChange={(e) => setMessage(e.target.value)}
         value={message}
-        className="bg-[hsl(0,0%,12%)] rounded-md w-full px-3 py-2 text-base placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm border-0 outline-none focus:ring-0 overflow-y-auto resize-none transition-all duration-200 focus-visible:ring-0 focus-visible:ring-offset-0 focus:ring-offset-0 focus-visible:border-0 focus-visible:outline-none"
         placeholder="Type your message here."
         disabled={isSending}
+        style={{
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.text.primary,
+          borderRadius: theme.shape.borderRadius,
+          width: "100%",
+          // padding: theme.spacing(1.5),
+          fontSize: theme.typography.body1.fontSize,
+          border: "none",
+          outline: "none",
+          resize: "none",
+          overflowY: "auto",
+          maxHeight: "20vh",
+          minHeight: "5vh",
+        }}
       />
-      <div className="flex justify-between items-center mt-2">
+      <div style={{ display: "flex", justifyContent: "space-between", marginTop: theme.spacing(1) }}>
         <IconButton
           aria-label="Attach"
           color="default"
-          className="hover:bg-[hsl(0,0%,18%)]"
           disabled={isSending}
+          style={{
+            backgroundColor: theme.palette.action.hover,
+          }}
         >
           <Plus size={20} />
         </IconButton>
         <IconButton
           aria-label="Send"
           color="success"
-          className="hover:bg-[hsl(143,85%,36%)]"
           onClick={handleCreateMessage}
           disabled={isSending}
+          style={{
+            backgroundColor: theme.palette.success.main,
+            color: theme.palette.success.contrastText,
+          }}
         >
           <SendHorizontal size={20} />
         </IconButton>

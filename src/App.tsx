@@ -55,10 +55,10 @@ import {demoTheme} from "@/Theme";
 // import { SidebarFooter } from "./components/ui/sidebar";
 
 const NAVIGATION: Navigation = [
-  {
-    kind: "header",
-    title: "Main items"
-  },
+  // {
+  //   kind: "header",
+  //   title: "Main items"
+  // },
   {
     segment: "dashboard",
     title: "Dashboard",
@@ -84,35 +84,35 @@ const NAVIGATION: Navigation = [
     title: "Community",
     icon: <CloudCircleIcon />
   },
-  {
-    kind: "divider"
-  },
-  {
-    kind: "header",
-    title: "Analytics"
-  },
-  {
-    segment: "reports",
-    title: "Reports",
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: "history",
-        title: "History",
-        icon: <DescriptionIcon />
-      },
-      {
-        segment: "traffic",
-        title: "Traffic",
-        icon: <DescriptionIcon />
-      }
-    ]
-  },
-  {
-    segment: "integrations",
-    title: "Integrations",
-    icon: <LayersIcon />
-  }
+  // {
+  //   kind: "divider"
+  // },
+  // {
+  //   kind: "header",
+  //   title: "Analytics"
+  // },
+  // {
+  //   segment: "reports",
+  //   title: "Reports",
+  //   icon: <BarChartIcon />,
+  //   children: [
+  //     {
+  //       segment: "history",
+  //       title: "History",
+  //       icon: <DescriptionIcon />
+  //     },
+  //     {
+  //       segment: "traffic",
+  //       title: "Traffic",
+  //       icon: <DescriptionIcon />
+  //     }
+  //   ]
+  // },
+  // {
+  //   segment: "integrations",
+  //   title: "Integrations",
+  //   icon: <LayersIcon />
+  // }
 ];
 
 // const demoTheme = createTheme({
@@ -153,21 +153,21 @@ const NAVIGATION: Navigation = [
 //   },
 // });
 
-function DemoPageContent({ pathname }: { pathname: string }) {
-  return (
-    <Box
-      sx={{
-        py: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      <Typography>Dashboard content for {pathname}</Typography>
-    </Box>
-  );
-}
+// function DemoPageContent({ pathname }: { pathname: string }) {
+//   return (
+//     <Box
+//       sx={{
+//         py: 4,
+//         display: "flex",
+//         flexDirection: "column",
+//         alignItems: "center",
+//         textAlign: "center",
+//       }}
+//     >
+//       <Typography>Dashboard content for {pathname}</Typography>
+//     </Box>
+//   );
+// }
 
 function ToolbarActionsSearch() {
   return (
@@ -452,8 +452,8 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       <DashboardLayout
         slots={{
           appTitle: CustomAppTitle,
-          toolbarActions: ToolbarActionsSearch,
-          sidebarFooter: SidebarFooterAccount,
+          // toolbarActions: ToolbarActionsSearch,
+          // sidebarFooter: SidebarFooterAccount,
         }}
       >
         <Outlet />

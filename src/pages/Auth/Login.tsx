@@ -18,6 +18,7 @@ function Login() {
     setError("");
 
     try {
+      // localStorage.removeItem("authToken"); // Remove any existing token
       const response = await axios.post(`${backendUrl}/auth/login`, { email });
       localStorage.setItem("authToken", response.data.token);
       setTimeout(() => navigate("/"), 2000);
@@ -29,8 +30,8 @@ function Login() {
   const handleGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
     const { credential } = credentialResponse; // Extract the ID token
     if (credential) {
-      // console.log(`ID Token: ${credential}`); // Log the ID token
       try {
+        // localStorage.removeItem("authToken"); // Remove any existing token
         const response = await axios.post(
           `${backendUrl}/auth/google`,
           { credential },

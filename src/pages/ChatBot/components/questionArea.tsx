@@ -15,10 +15,11 @@ function QuestionArea({ message }: QuestionAreaProps) {
         color: theme.palette.text.primary, // Adapt text color to the theme
         padding: theme.spacing(2), // Consistent padding
         marginRight: theme.spacing(2), // Consistent margin
-        borderRadius: theme.spacing(4), // More rounded corners
+        borderRadius: theme.spacing(2), // More rounded corners
         marginBottom: theme.spacing(2), // Spacing between messages
         maxWidth: "75%", // Limit the width of the message box
         wordWrap: "break-word", // Ensure long words break to the next line
+        alignSelf: "center", // Center the message box in the flex container
       }}
     >
       {message}

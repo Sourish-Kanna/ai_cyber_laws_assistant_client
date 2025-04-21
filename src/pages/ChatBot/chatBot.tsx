@@ -10,6 +10,7 @@ import { formatDateAndTime } from "@/helpers/commonHelper.ts";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { Outlet, useNavigate } from "react-router-dom";
 import * as routes from "../../routes.ts";
+
 export interface ChatSection {
   chat_section_id: number;
   title: string;
@@ -18,13 +19,20 @@ export interface ChatSection {
 }
 
 function ChatBot() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      navigate("/login"); // Redirect to login if not authenticated
+    }
+  }, [navigate]);
+
   //data
   const [height, setHeight] = useState(400);
   const [isOpen, setIsOpen] = useState(true);
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const [chatSections, setChatSections] = useState<ChatSection[]>([]);
-
-  const navigate = useNavigate();
 
   //methods
   useEffect(() => {

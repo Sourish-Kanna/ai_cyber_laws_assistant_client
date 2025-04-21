@@ -17,7 +17,8 @@ interface Post {
 const CommunityTab: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState("");
-  const userId = 1; // Replace with the actual logged-in user ID
+  const authToken = localStorage.getItem("authToken");
+  const userId = authToken ? parseInt(JSON.parse(authToken).userId) : null;
 
   // Fetch posts from the API
   const fetchPosts = async () => {

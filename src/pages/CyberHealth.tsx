@@ -1,193 +1,146 @@
+"use client";
 import React, { useState } from "react";
 import {
   Box,
   Button,
   Container,
-  Paper,
-  Typography,
+  FormControl,
+  FormControlLabel,
   LinearProgress,
   Radio,
   RadioGroup,
-  FormControlLabel,
-  FormControl,
-  Chip,
-  Divider,
-  Stack
+  Typography,
+  useTheme,
+  Paper
 } from "@mui/material";
-import {
-  Security as SecurityIcon,
-  Replay as ReplayIcon,
-  EmojiEvents,
-  MoodBad,
-  SentimentSatisfied,
-  Celebration
-} from "@mui/icons-material";
 
-interface Question {
-  question: string;
-  options: string[];
-  correctAnswer: string;
-}
-
-const questions: Question[] = [
-  {
-    question: "Do you use two-factor authentication for your online accounts?",
-    options: ["Always", "Sometimes", "Never", "I don't know what this is"],
-    correctAnswer: "Always"
-  },
+const questions = [
   {
     question: "How often do you update your passwords?",
-    options: ["Every 3 months", "Every 6 months", "Once a year", "Never"],
-    correctAnswer: "Every 3 months"
-  },
-  {
-    question: "How do you handle suspicious emails?",
-    options: [
-      "Never open them",
-      "Open but don't click",
-      "Click links sometimes",
-      "Click links often"
-    ],
-    correctAnswer: "Never open them"
+    options: ["Monthly", "Rarely", "Only when prompted", "Never"]
   },
   {
     question: "Do you use the same password for multiple accounts?",
-    options: ["Never", "For unimportant accounts", "For some accounts", "For all accounts"],
-    correctAnswer: "Never"
+    options: ["Yes", "No", "Sometimes", "Only for unimportant accounts"]
+  },
+  {
+    question: "How do you connect to public Wi-Fi?",
+    options: [
+      "Use a VPN",
+      "Just connect without precautions",
+      "Use HTTPS websites only",
+      "Avoid public Wi-Fi"
+    ]
+  },
+  {
+    question: "Do you click links from unknown sources?",
+    options: ["Never", "Sometimes", "Always verify first", "Yes"]
+  },
+  {
+    question: "How do you handle software updates?",
+    options: [
+      "Enable auto-updates",
+      "Update manually when reminded",
+      "Ignore them",
+      "Only update critical software"
+    ]
   }
 ];
 
-const CyberHealth: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [score, setScore] = useState<number>(0);
+const CyberHealth = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [showResult, setShowResult] = useState<boolean>(false);
-
-  const currentQuestion = questions[currentIndex];
-  const isLastQuestion = currentIndex === questions.length - 1;
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [showResult, setShowResult] = useState(false);
+  const theme = useTheme();
 
   const handleAnswerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedAnswer(event.target.value);
   };
 
   const handleNextClick = () => {
-    if (selectedAnswer === currentQuestion.correctAnswer) {
-      setScore((prev) => prev + 1);
-    }
+    if (!selectedAnswer) return;
+    const updatedAnswers = [...answers, selectedAnswer];
+    setAnswers(updatedAnswers);
+    setSelectedAnswer(null);
 
-    if (isLastQuestion) {
-      setShowResult(true);
+    if (currentIndex + 1 < questions.length) {
+      setCurrentIndex(currentIndex + 1);
     } else {
-      setCurrentIndex((prev) => prev + 1);
-      setSelectedAnswer(null);
+      setShowResult(true);
     }
   };
 
-  const getHealthStatus = (): string => {
-    const percentage = (score / questions.length) * 100;
-    if (percentage === 100) return "Cyber Security Expert";
-    if (percentage >= 75) return "Security Conscious";
-    if (percentage >= 50) return "Average Awareness";
+  const getHealthStatus = () => {
+    const safeAnswers = ["Monthly", "No", "Use a VPN", "Never", "Enable auto-updates"];
+    const score = answers.filter((a, i) => a === safeAnswers[i]).length;
+
+    if (score === 5) return "Excellent";
+    if (score >= 3) return "Good";
     return "Needs Improvement";
   };
 
-  const getResultColor = (): string => {
-    const percentage = (score / questions.length) * 100;
-    if (percentage >= 75) return "success.main";
-    if (percentage >= 50) return "warning.main";
-    return "error.main";
+
+if (showResult) {
+  const status = getHealthStatus();
+  const tips = {
+    Excellent:
+      "Continue practicing good cyber hygiene, and consider mentoring others on safe digital habits.",
+    Good: "You're on the right track! Strengthen your digital defenses by regularly reviewing your cybersecurity practices.",
+    "Needs Improvement":
+      "Start with the basics: use strong, unique passwords and avoid untrusted links or public networks without protection."
   };
 
-  const getResultIcon = () => {
-    const percentage = (score / questions.length) * 100;
-    if (percentage === 100) return <Celebration sx={{ fontSize: 60 }} color="success" />;
-    if (percentage >= 75) return <EmojiEvents sx={{ fontSize: 60 }} color="success" />;
-    if (percentage >= 50) return <SentimentSatisfied sx={{ fontSize: 60 }} color="warning" />;
-    return <MoodBad sx={{ fontSize: 60 }} color="error" />;
+  const messages = {
+    Excellent: "Outstanding! Your cybersecurity practices are top-notch.",
+    Good: "Well done! You have a solid foundation in cybersecurity.",
+    "Needs Improvement": "Thanks for checking in. There’s room to improve your cyber awareness."
   };
-
-  const getResultMessage = (): string => {
-    const status = getHealthStatus();
-    switch (status) {
-      case "Cyber Security Expert":
-        return "You're a cybersecurity champion! Your habits are exemplary and you're setting a great example for others.";
-      case "Security Conscious":
-        return "Great job! You have strong security habits with just a few areas that could use attention.";
-      case "Average Awareness":
-        return "You have basic security awareness, but there are several important practices you should adopt.";
-      case "Needs Improvement":
-        return "Your cybersecurity habits need significant improvement. Follow our tips below to enhance your security.";
-      default:
-        return "Thank you for completing the assessment!";
-    }
-  };
-
-  const getRecommendations = () => {
-    return (
-      <Box sx={{ mt: 3, textAlign: "left" }}>
-        <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "center" }}>
-          <SecurityIcon color="info" sx={{ mr: 1 }} /> Security Recommendations:
-        </Typography>
-        <ul style={{ paddingLeft: 20 }}>
-          <li>
-            <Typography>Enable two-factor authentication on all important accounts</Typography>
-          </li>
-          <li>
-            <Typography>
-              Use a password manager to create and store strong, unique passwords
-            </Typography>
-          </li>
-          <li>
-            <Typography>Keep your software and devices updated regularly</Typography>
-          </li>
-          <li>
-            <Typography>Learn to identify phishing attempts and suspicious links</Typography>
-          </li>
-        </ul>
-      </Box>
-    );
-  };
-
-  if (showResult) {
-    return (
-      <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-        <Paper elevation={4} sx={{ p: 4, borderRadius: 4, textAlign: "center" }}>
-          <Stack alignItems="center" spacing={2}>
-            {getResultIcon()}
-            <Typography variant="h4" sx={{ color: getResultColor(), fontWeight: 700 }}>
-              {getHealthStatus()}
-            </Typography>
-            <Chip
-              label={`Score: ${score}/${questions.length}`}
-              color="primary"
-              sx={{ fontSize: "1.1rem", px: 2, py: 1.5 }}
-            />
-            <Typography variant="body1" sx={{ mt: 2, fontSize: "1.1rem" }}>
-              {getResultMessage()}
-            </Typography>
-
-            <Divider sx={{ my: 3, width: "100%" }} />
-
-            {getRecommendations()}
-
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<ReplayIcon />}
-              onClick={() => window.location.reload()}
-              sx={{ mt: 3, px: 4, py: 1.5 }}
-            >
-              Take Again
-            </Button>
-          </Stack>
-        </Paper>
-      </Container>
-    );
-  }
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={4} sx={{ p: 4, borderRadius: 4 }}>
+    <Container maxWidth="md" sx={{ mt: 8 }}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          borderRadius: 4,
+          textAlign: "center",
+          backgroundColor: theme.palette.background.paper
+        }}
+      >
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          Cyber Health Status: {status}
+        </Typography>
+        <Typography variant="h6" color="primary" gutterBottom>
+          {messages[status]}
+        </Typography>
+        <Typography variant="body1" sx={{ mt: 2, mb: 1 }}>
+          Thank you for completing the Cyber Health Check. Staying informed is your first line of
+          defense.
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          <strong>Cyber Tip:</strong> {tips[status]}
+        </Typography>
+      </Paper>
+    </Container>
+  );
+}
+
+
+  const currentQuestion = questions[currentIndex];
+  const isLastQuestion = currentIndex === questions.length - 1;
+
+  return (
+    <Container maxWidth={false} sx={{ mt: 6, px: 4 }}>
+      <Box
+        sx={{
+          maxWidth: 1000,
+          mx: "auto",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%"
+        }}
+      >
         <Box mb={3}>
           <LinearProgress
             variant="determinate"
@@ -199,49 +152,47 @@ const CyberHealth: React.FC = () => {
           </Typography>
         </Box>
 
-        <Typography variant="h5" fontWeight={600} gutterBottom>
-          {currentQuestion.question}
-        </Typography>
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="h5" fontWeight={600} gutterBottom align="left">
+            {currentQuestion.question}
+          </Typography>
 
-        <FormControl component="fieldset" fullWidth sx={{ mb: 4 }}>
-          <RadioGroup value={selectedAnswer || ""} onChange={handleAnswerChange}>
-            {currentQuestion.options.map((option, index) => (
-              <Paper
-                key={index}
-                elevation={2}
-                sx={{
-                  p: 2,
-                  mb: 2,
-                  borderRadius: 2,
-                  border: selectedAnswer === option ? "2px solid #1976d2" : "1px solid #e0e0e0",
-                  "&:hover": {
-                    borderColor: "primary.main",
-                    backgroundColor: "action.hover"
-                  }
-                }}
-              >
+          <FormControl component="fieldset" fullWidth sx={{ mt: 2 }}>
+            <RadioGroup value={selectedAnswer || ""} onChange={handleAnswerChange}>
+              {currentQuestion.options.map((option, index) => (
                 <FormControlLabel
+                  key={index}
                   value={option}
                   control={<Radio />}
-                  label={<Typography>{option}</Typography>}
-                  sx={{ width: "100%", m: 0 }}
+                  label={<Typography variant="body1">{option}</Typography>}
+                  sx={{
+                    alignItems: "center",
+                    ml: 0,
+                    my: 1,
+                    pl: 1,
+                    display: "flex",
+                    ".MuiTypography-root": {
+                      pl: 1
+                    }
+                  }}
                 />
-              </Paper>
-            ))}
-          </RadioGroup>
-        </FormControl>
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </Box>
 
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
-          onClick={handleNextClick}
-          disabled={!selectedAnswer}
-          sx={{ py: 1.5 }}
-        >
-          {isLastQuestion ? "Submit Answers" : "Next Question"}
-        </Button>
-      </Paper>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleNextClick}
+            disabled={!selectedAnswer}
+            sx={{ px: 4, py: 1.5 }}
+          >
+            {isLastQuestion ? "Submit Answers" : "Next Question"}
+          </Button>
+        </Box>
+      </Box>
     </Container>
   );
 };

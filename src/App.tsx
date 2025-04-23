@@ -274,9 +274,7 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
               // Redirect to sign-in page or trigger sign-in logic
               window.location.href = "/login"; // Example: Redirect to login page
             }}
-          >
-            Sign In
-          </SignInButton>
+          / >
         </AccountPopoverFooter>
       ) : (
         
@@ -473,7 +471,7 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       signIn: () => {
         setSession(null);
         fetchUserData(); // Moved fetchUserData() outside of setSession
-        navigate("/dashboard"); // Redirect after sign in
+        navigate("/login"); // Redirect after sign in
       },
       signOut: () => {
         setSession(null);
@@ -490,7 +488,7 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
         theme={demoTheme}
         window={demoWindow}
         authentication={authentication}
-        session={session}
+        // session={session}
         userData={null} // Pass null userData for anonymous state
       >
         <DashboardLayout

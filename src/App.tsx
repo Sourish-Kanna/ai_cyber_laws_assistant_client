@@ -284,6 +284,9 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
               }}
               src={userData.profile_img ?? ""}
               alt={userData.name ?? ""}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "/default-avatar.png"; // Fallback image
+              }}
             >
               {userData.name ? userData.name[0] : ""}
             </Avatar>
@@ -420,15 +423,27 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
   async function fetchUserData() {
     const authToken = localStorage.getItem("authToken");
     const userId = authToken ? parseInt(JSON.parse(authToken)) : null;
+
     if (!userId) {
-      console.error("User ID not found in auth token.");
+      console.warn("User ID not found in auth token. Using anonymous user.");
+      setUserData({
+        name: "Anonymous User",
+        email: "anonymous@example.com",
+        profile_img: "/default-avatar.png", // Path to a default avatar image
+      });
+      setSession({
+        user: {
+          name: "Anonymous User",
+          email: "anonymous@example.com",
+          image: "/default-avatar.png",
+        },
+      });
       return;
     }
-    // console.log("User ID:", userId);
+
     try {
       const response = await axios.get(`${BACKEND_API_Link}/users/${userId}`);
       setUserData(response.data.data);
-      // console.log("User data:", response.data.data);
       setSession({
         user: {
           name: response.data.data.name,
@@ -438,6 +453,19 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       });
     } catch (error) {
       console.error("Error fetching user data:", error);
+      // Fallback to anonymous user in case of an error
+      setUserData({
+        name: "Anonymous User",
+        email: "anonymous@example.com",
+        profile_img: "/default-avatar.png",
+      });
+      setSession({
+        user: {
+          name: "Anonymous User",
+          email: "anonymous@example.com",
+          image: "/default-avatar.png",
+        },
+      });
     }
   }
 

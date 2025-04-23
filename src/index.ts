@@ -14,3 +14,4 @@ export { default as Register } from "./pages/Auth/Register.tsx";
 export { default as CyberNews } from "./pages/CyberNews.tsx";
 export { default as CyberHealth } from "./pages/CyberHealth.tsx";
 export { default as UserProfile } from "./pages/ChatBot/UserProfile.tsx";
+export { default as CommunityTab } from "./pages/CommunityTab.tsx";

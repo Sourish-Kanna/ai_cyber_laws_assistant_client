@@ -42,11 +42,13 @@ import {
   AccountPreview,
   AccountPopoverFooter,
   SignOutButton,
+  SignInButton,
   AccountPreviewProps,
 } from "@toolpad/core/Account";
 import { green } from "@mui/material/colors";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
+import axios from "axios";
 
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {demoTheme} from "@/Theme";
@@ -54,11 +56,12 @@ import {demoTheme} from "@/Theme";
 // import type { Router, Session } from "@toolpad/core/AppProvider";
 // import { SidebarFooter } from "./components/ui/sidebar";
 
+const BACKEND_API_Link = import.meta.env.VITE_BASE_SERVER_URL;
 const NAVIGATION: Navigation = [
-  {
-    kind: "header",
-    title: "Main items"
-  },
+  // {
+  //   kind: "header",
+  //   title: "Main items"
+  // },
   {
     segment: "dashboard",
     title: "Dashboard",
@@ -80,34 +83,39 @@ const NAVIGATION: Navigation = [
     icon: <HealthAndSafetyIcon />
   },
   {
-    kind: "divider"
+    segment: "community",
+    title: "Community",
+    icon: <CloudCircleIcon />
   },
-  {
-    kind: "header",
-    title: "Analytics"
-  },
-  {
-    segment: "reports",
-    title: "Reports",
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: "history",
-        title: "History",
-        icon: <DescriptionIcon />
-      },
-      {
-        segment: "traffic",
-        title: "Traffic",
-        icon: <DescriptionIcon />
-      }
-    ]
-  },
-  {
-    segment: "integrations",
-    title: "Integrations",
-    icon: <LayersIcon />
-  }
+  // {
+  //   kind: "divider"
+  // },
+  // {
+  //   kind: "header",
+  //   title: "Analytics"
+  // },
+  // {
+  //   segment: "reports",
+  //   title: "Reports",
+  //   icon: <BarChartIcon />,
+  //   children: [
+  //     {
+  //       segment: "history",
+  //       title: "History",
+  //       icon: <DescriptionIcon />
+  //     },
+  //     {
+  //       segment: "traffic",
+  //       title: "Traffic",
+  //       icon: <DescriptionIcon />
+  //     }
+  //   ]
+  // },
+  // {
+  //   segment: "integrations",
+  //   title: "Integrations",
+  //   icon: <LayersIcon />
+  // }
 ];
 
 // const demoTheme = createTheme({
@@ -148,21 +156,21 @@ const NAVIGATION: Navigation = [
 //   },
 // });
 
-function DemoPageContent({ pathname }: { pathname: string }) {
-  return (
-    <Box
-      sx={{
-        py: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      <Typography>Dashboard content for {pathname}</Typography>
-    </Box>
-  );
-}
+// function DemoPageContent({ pathname }: { pathname: string }) {
+//   return (
+//     <Box
+//       sx={{
+//         py: 4,
+//         display: "flex",
+//         flexDirection: "column",
+//         alignItems: "center",
+//         textAlign: "center",
+//       }}
+//     >
+//       <Typography>Dashboard content for {pathname}</Typography>
+//     </Box>
+//   );
+// }
 
 function ToolbarActionsSearch() {
   return (
@@ -253,16 +261,27 @@ const accounts = [
   },
 ];
 
-function SidebarFooterAccountPopover() {
+function SidebarFooterAccountPopover({ userData }: { userData: any }) {
+  const isAnonymous = userData === null;
+
   return (
     <Stack direction="column">
-      <Typography variant="body2" mx={2} mt={1}>
-        Accounts
-      </Typography>
-      <MenuList>
-        {accounts.map((account) => (
+      
+      {isAnonymous ? (
+        <AccountPopoverFooter>
+          <SignInButton
+            onClick={() => {
+              // Redirect to sign-in page or trigger sign-in logic
+              window.location.href = "/login"; // Example: Redirect to login page
+            }}
+          >
+            Sign In
+          </SignInButton>
+        </AccountPopoverFooter>
+      ) : (
+        
+        <MenuList>
           <MenuItem
-            key={account.id}
             component="button"
             sx={{
               justifyContent: "flex-start",
@@ -276,12 +295,14 @@ function SidebarFooterAccountPopover() {
                   width: 32,
                   height: 32,
                   fontSize: "0.95rem",
-                  bgcolor: account.color,
                 }}
-                src={account.image ?? ""}
-                alt={account.name ?? ""}
+                src={userData.profile_img ?? ""}
+                alt={userData.name ?? ""}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/default-avatar.png"; // Fallback image
+                }}
               >
-                {account.name[0]}
+                {userData.name ? userData.name[0] : ""}
               </Avatar>
             </ListItemIcon>
             <ListItemText
@@ -291,18 +312,17 @@ function SidebarFooterAccountPopover() {
                 alignItems: "flex-start",
                 width: "100%",
               }}
-              primary={account.name}
-              secondary={account.email}
+              primary={userData.name}
+              secondary={userData.email}
               primaryTypographyProps={{ variant: "body2" }}
               secondaryTypographyProps={{ variant: "caption" }}
             />
           </MenuItem>
-        ))}
-      </MenuList>
-      <Divider />
-      <AccountPopoverFooter>
-        <SignOutButton />
-      </AccountPopoverFooter>
+          <AccountPopoverFooter>
+            <SignOutButton />
+          </AccountPopoverFooter>
+        </MenuList>
+      )}
     </Stack>
   );
 }
@@ -319,11 +339,13 @@ function SidebarFooterAccount({ mini }: SidebarFooterProps) {
     () => createPreviewComponent(mini),
     [mini]
   );
+  const AppContext = React.createContext({ userData: null });
+  const { userData } = React.useContext(AppContext);
   return (
     <Account
       slots={{
         preview: PreviewComponent,
-        popoverContent: SidebarFooterAccountPopover,
+        popoverContent: () => <SidebarFooterAccountPopover userData={userData} />,
       }}
       slotProps={{
         popover: {
@@ -393,18 +415,8 @@ interface DemoProps {
   window?: () => Window;
 }
 
-const demoSession = {
-  user: {
-    name: "Testing",
-    email: "Testing@outlook.com",
-    image: "https://avatars.githubusercontent.com/u/19550456",
-  },
-};
-
 export default function DashboardLayoutAccountSidebar(props: DemoProps) {
   const { window } = props;
-
-  // const [pathname, setPathname] = React.useState("/dashboard");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -417,14 +429,50 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
     };
   }, [location, navigate]);
 
-  // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
 
-  const [session, setSession] = React.useState<Session | null>(demoSession);
+  const [session, setSession] = React.useState<Session | null>(null);
+  const [userData, setUserData] = React.useState(null);
+
+  async function fetchUserData() {
+    const authToken = localStorage.getItem("authToken");
+    const userId = authToken ? parseInt(JSON.parse(authToken)) : null;
+
+    if (!userId) {
+      console.warn("User ID not found in auth token. Clearing session for anonymous user.");
+      setUserData(null); // Clear user data
+      setSession(null); // Clear session
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${BACKEND_API_Link}/users/${userId}`);
+      setUserData(response.data.data);
+      setSession({
+        user: {
+          name: response.data.data.name,
+          email: response.data.data.email,
+          image: response.data.data.profile_img,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      // Fallback to clearing session in case of an error
+      setUserData(null);
+      setSession(null);
+    }
+  }
+
+  // Fetch user data from API
+  React.useEffect(() => {
+    fetchUserData();
+  }, []);
+
   const authentication = React.useMemo(() => {
     return {
       signIn: () => {
-        setSession(demoSession);
+        setSession(null);
+        fetchUserData(); // Moved fetchUserData() outside of setSession
         navigate("/dashboard"); // Redirect after sign in
       },
       signOut: () => {
@@ -434,8 +482,36 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
     };
   }, []);
 
+  if (!userData) {
+    return (
+      <AppProvider
+        navigation={NAVIGATION}
+        router={router}
+        theme={demoTheme}
+        window={demoWindow}
+        authentication={authentication}
+        session={session}
+        userData={null} // Pass null userData for anonymous state
+      >
+        <DashboardLayout
+          slots={{
+            appTitle: () => <CustomAppTitle />,
+            toolbarActions: ToolbarActionsSearch,
+            sidebarFooter: () => <SidebarFooterAccountPopover userData={null} />, // Render sidebar with no user data
+          }}
+        >
+          <Outlet />
+          {/* <Box sx={{ p: 4 }}>
+            <Typography variant="h6" align="center">
+              Welcome! Please sign in to access your account.
+            </Typography>
+          </Box> */}
+        </DashboardLayout>
+      </AppProvider>
+    );
+  }
+
   return (
-    // preview-start
     <AppProvider
       navigation={NAVIGATION}
       router={router}
@@ -443,17 +519,17 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       window={demoWindow}
       authentication={authentication}
       session={session}
+      userData={userData}
     >
       <DashboardLayout
         slots={{
-          appTitle: CustomAppTitle,
+          appTitle: () => <CustomAppTitle />,
           toolbarActions: ToolbarActionsSearch,
-          sidebarFooter: SidebarFooterAccount,
+          sidebarFooter: () => <SidebarFooterAccountPopover userData={userData} />,
         }}
       >
         <Outlet />
       </DashboardLayout>
     </AppProvider>
-    // preview-end
   );
 }

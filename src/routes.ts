@@ -8,6 +8,8 @@ const REGISTER = "/register";
 const USER_PROFILE = "/user-profile";
 const CYBERNEWS = "/cybernews";
 const CYBERHEALTH = "/cyberhealth";
+const COMMUNITY_TAB = "/community";
+
 export {
   CHATBOT,
   DASHBOARD,
@@ -18,5 +20,6 @@ export {
   REGISTER,
   USER_PROFILE,
   CYBERNEWS,
-  CYBERHEALTH
+  CYBERHEALTH,
+  COMMUNITY_TAB
 };

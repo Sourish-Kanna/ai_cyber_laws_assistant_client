@@ -1,6 +1,6 @@
 // import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Navigate } from "react-router-dom";
 import "./index.css";
 // import MainDashBoard from "./App.tsx";
 import * as Pages from "./index.ts";
@@ -9,7 +9,16 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import {GoogleOAuthProvider} from  "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { JSX } from "react";
+
+const isAuthenticated = () => {
+  return !!localStorage.getItem("authToken"); // Check if the user is logged in
+};
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" />;
+};
 
 const router = createBrowserRouter([
   {
@@ -18,11 +27,19 @@ const router = createBrowserRouter([
     children: [
       {
         path: routes.CHATBOT,
-        element: <Pages.ChatBot />,
+        element: (
+          <ProtectedRoute>
+            <Pages.ChatBot />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: routes.CHATPAGE,
-            element: <Pages.ChattingPage />,
+            element: (
+              <ProtectedRoute>
+                <Pages.ChattingPage />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
@@ -42,7 +59,14 @@ const router = createBrowserRouter([
         path: routes.CYBERHEALTH,
         element: <Pages.CyberHealth />,
       },
-
+      {
+        path: routes.COMMUNITY_TAB,
+        element: (
+            // <ProtectedRoute>
+              <Pages.CommunityTab />
+            // </ProtectedRoute>
+        ),
+      },
     ],
   },
   {
@@ -57,11 +81,8 @@ const router = createBrowserRouter([
     path: routes.REGISTER,
     element: <Pages.Register />,
   },
-  // {
-  //   path:'/chatbot',
-  //   element:<ChatBot/>
-  // }
 ]);
+
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 // console.log("Google Client ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
 

@@ -47,6 +47,7 @@ import {
 import { green } from "@mui/material/colors";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
+import axios from "axios";
 
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {demoTheme} from "@/Theme";
@@ -54,6 +55,7 @@ import {demoTheme} from "@/Theme";
 // import type { Router, Session } from "@toolpad/core/AppProvider";
 // import { SidebarFooter } from "./components/ui/sidebar";
 
+const BACKEND_API_Link = import.meta.env.VITE_BASE_SERVER_URL;
 const NAVIGATION: Navigation = [
   // {
   //   kind: "header",
@@ -258,51 +260,47 @@ const accounts = [
   },
 ];
 
-function SidebarFooterAccountPopover() {
+function SidebarFooterAccountPopover({ userData }: { userData: any }) {
   return (
     <Stack direction="column">
       <Typography variant="body2" mx={2} mt={1}>
-        Accounts
+        Account
       </Typography>
       <MenuList>
-        {accounts.map((account) => (
-          <MenuItem
-            key={account.id}
-            component="button"
-            sx={{
-              justifyContent: "flex-start",
-              width: "100%",
-              columnGap: 2,
-            }}
-          >
-            <ListItemIcon>
-              <Avatar
-                sx={{
-                  width: 32,
-                  height: 32,
-                  fontSize: "0.95rem",
-                  bgcolor: account.color,
-                }}
-                src={account.image ?? ""}
-                alt={account.name ?? ""}
-              >
-                {account.name[0]}
-              </Avatar>
-            </ListItemIcon>
-            <ListItemText
+        <MenuItem
+          component="button"
+          sx={{
+            justifyContent: "flex-start",
+            width: "100%",
+            columnGap: 2,
+          }}
+        >
+          <ListItemIcon>
+            <Avatar
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                width: "100%",
+                width: 32,
+                height: 32,
+                fontSize: "0.95rem",
               }}
-              primary={account.name}
-              secondary={account.email}
-              primaryTypographyProps={{ variant: "body2" }}
-              secondaryTypographyProps={{ variant: "caption" }}
-            />
-          </MenuItem>
-        ))}
+              src={userData.profile_img ?? ""}
+              alt={userData.name ?? ""}
+            >
+              {userData.name ? userData.name[0] : ""}
+            </Avatar>
+          </ListItemIcon>
+          <ListItemText
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              width: "100%",
+            }}
+            primary={userData.name}
+            secondary={userData.email}
+            primaryTypographyProps={{ variant: "body2" }}
+            secondaryTypographyProps={{ variant: "caption" }}
+          />
+        </MenuItem>
       </MenuList>
       <Divider />
       <AccountPopoverFooter>
@@ -324,11 +322,13 @@ function SidebarFooterAccount({ mini }: SidebarFooterProps) {
     () => createPreviewComponent(mini),
     [mini]
   );
+  const AppContext = React.createContext({ userData: null });
+  const { userData } = React.useContext(AppContext);
   return (
     <Account
       slots={{
         preview: PreviewComponent,
-        popoverContent: SidebarFooterAccountPopover,
+        popoverContent: () => <SidebarFooterAccountPopover userData={userData} />,
       }}
       slotProps={{
         popover: {
@@ -398,18 +398,8 @@ interface DemoProps {
   window?: () => Window;
 }
 
-const demoSession = {
-  user: {
-    name: "Testing",
-    email: "Testing@outlook.com",
-    image: "https://avatars.githubusercontent.com/u/19550456",
-  },
-};
-
 export default function DashboardLayoutAccountSidebar(props: DemoProps) {
   const { window } = props;
-
-  // const [pathname, setPathname] = React.useState("/dashboard");
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -422,14 +412,45 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
     };
   }, [location, navigate]);
 
-  // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
 
-  const [session, setSession] = React.useState<Session | null>(demoSession);
+  const [session, setSession] = React.useState<Session | null>(null);
+  const [userData, setUserData] = React.useState(null);
+
+  async function fetchUserData() {
+    const authToken = localStorage.getItem("authToken");
+    const userId = authToken ? parseInt(JSON.parse(authToken)) : null;
+    if (!userId) {
+      console.error("User ID not found in auth token.");
+      return;
+    }
+    // console.log("User ID:", userId);
+    try {
+      const response = await axios.get(`${BACKEND_API_Link}/users/${userId}`);
+      setUserData(response.data.data);
+      // console.log("User data:", response.data.data);
+      setSession({
+        user: {
+          name: response.data.data.name,
+          email: response.data.data.email,
+          image: response.data.data.profile_img,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  }
+
+  // Fetch user data from API
+  React.useEffect(() => {
+    fetchUserData();
+  }, []);
+
   const authentication = React.useMemo(() => {
     return {
       signIn: () => {
-        setSession(demoSession);
+        setSession(null);
+        fetchUserData(); // Moved fetchUserData() outside of setSession
         navigate("/dashboard"); // Redirect after sign in
       },
       signOut: () => {
@@ -439,8 +460,11 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
     };
   }, []);
 
+  if (!userData) {
+    return <div>Loading...</div>; // Show a loading state while fetching data
+  }
+
   return (
-    // preview-start
     <AppProvider
       navigation={NAVIGATION}
       router={router}
@@ -448,17 +472,17 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       window={demoWindow}
       authentication={authentication}
       session={session}
+      userData={userData}
     >
       <DashboardLayout
         slots={{
-          appTitle: CustomAppTitle,
-          // toolbarActions: ToolbarActionsSearch,
-          // sidebarFooter: SidebarFooterAccount,
+          appTitle: () => <CustomAppTitle/>,
+          toolbarActions: ToolbarActionsSearch,
+          sidebarFooter: () => <SidebarFooterAccountPopover userData={userData} />,
         }}
       >
         <Outlet />
       </DashboardLayout>
     </AppProvider>
-    // preview-end
   );
 }

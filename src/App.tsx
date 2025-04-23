@@ -262,68 +262,67 @@ const accounts = [
 ];
 
 function SidebarFooterAccountPopover({ userData }: { userData: any }) {
-  const isAnonymous = userData?.name === "Anonymous User";
+  const isAnonymous = userData === null;
 
   return (
     <Stack direction="column">
-      <Typography variant="body2" mx={2} mt={1}>
-        Account
-      </Typography>
-      <MenuList>
-        <MenuItem
-          component="button"
-          sx={{
-            justifyContent: "flex-start",
-            width: "100%",
-            columnGap: 2,
-          }}
-        >
-          <ListItemIcon>
-            <Avatar
-              sx={{
-                width: 32,
-                height: 32,
-                fontSize: "0.95rem",
-              }}
-              src={userData.profile_img ?? ""}
-              alt={userData.name ?? ""}
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = "/default-avatar.png"; // Fallback image
-              }}
-            >
-              {userData.name ? userData.name[0] : ""}
-            </Avatar>
-          </ListItemIcon>
-          <ListItemText
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              width: "100%",
-            }}
-            primary={userData.name}
-            secondary={userData.email}
-            primaryTypographyProps={{ variant: "body2" }}
-            secondaryTypographyProps={{ variant: "caption" }}
-          />
-        
-      {/* <Divider /> */}
-      <AccountPopoverFooter>
-        {isAnonymous ? (
+      
+      {isAnonymous ? (
+        <AccountPopoverFooter>
           <SignInButton
             onClick={() => {
               // Redirect to sign-in page or trigger sign-in logic
               window.location.href = "/login"; // Example: Redirect to login page
             }}
-          />
-        ) : (
-          <div>
-          <SignOutButton />
-          </div>
-        )}
-      </AccountPopoverFooter>
-      </MenuItem>
-      </MenuList>
+          >
+            Sign In
+          </SignInButton>
+        </AccountPopoverFooter>
+      ) : (
+        
+        <MenuList>
+          <MenuItem
+            component="button"
+            sx={{
+              justifyContent: "flex-start",
+              width: "100%",
+              columnGap: 2,
+            }}
+          >
+            <ListItemIcon>
+              <Avatar
+                sx={{
+                  width: 32,
+                  height: 32,
+                  fontSize: "0.95rem",
+                }}
+                src={userData.profile_img ?? ""}
+                alt={userData.name ?? ""}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/default-avatar.png"; // Fallback image
+                }}
+              >
+                {userData.name ? userData.name[0] : ""}
+              </Avatar>
+            </ListItemIcon>
+            <ListItemText
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                width: "100%",
+              }}
+              primary={userData.name}
+              secondary={userData.email}
+              primaryTypographyProps={{ variant: "body2" }}
+              secondaryTypographyProps={{ variant: "caption" }}
+            />
+          </MenuItem>
+          <AccountPopoverFooter>
+            <SignOutButton />
+          </AccountPopoverFooter>
+        </MenuList>
+      )}
     </Stack>
   );
 }
@@ -440,19 +439,9 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
     const userId = authToken ? parseInt(JSON.parse(authToken)) : null;
 
     if (!userId) {
-      console.warn("User ID not found in auth token. Using anonymous user.");
-      setUserData({
-        name: "Anonymous User",
-        email: "anonymous@example.com",
-        profile_img: "/default-avatar.png", // Path to a default avatar image
-      });
-      setSession({
-        user: {
-          name: "Anonymous User",
-          email: "anonymous@example.com",
-          image: "/default-avatar.png",
-        },
-      });
+      console.warn("User ID not found in auth token. Clearing session for anonymous user.");
+      setUserData(null); // Clear user data
+      setSession(null); // Clear session
       return;
     }
 
@@ -468,19 +457,9 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       });
     } catch (error) {
       console.error("Error fetching user data:", error);
-      // Fallback to anonymous user in case of an error
-      setUserData({
-        name: "Anonymous User",
-        email: "anonymous@example.com",
-        profile_img: "/default-avatar.png",
-      });
-      setSession({
-        user: {
-          name: "Anonymous User",
-          email: "anonymous@example.com",
-          image: "/default-avatar.png",
-        },
-      });
+      // Fallback to clearing session in case of an error
+      setUserData(null);
+      setSession(null);
     }
   }
 
@@ -504,7 +483,32 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
   }, []);
 
   if (!userData) {
-    return <div>Loading...</div>; // Show a loading state while fetching data
+    return (
+      <AppProvider
+        navigation={NAVIGATION}
+        router={router}
+        theme={demoTheme}
+        window={demoWindow}
+        authentication={authentication}
+        session={session}
+        userData={null} // Pass null userData for anonymous state
+      >
+        <DashboardLayout
+          slots={{
+            appTitle: () => <CustomAppTitle />,
+            toolbarActions: ToolbarActionsSearch,
+            sidebarFooter: () => <SidebarFooterAccountPopover userData={null} />, // Render sidebar with no user data
+          }}
+        >
+          <Outlet />
+          {/* <Box sx={{ p: 4 }}>
+            <Typography variant="h6" align="center">
+              Welcome! Please sign in to access your account.
+            </Typography>
+          </Box> */}
+        </DashboardLayout>
+      </AppProvider>
+    );
   }
 
   return (

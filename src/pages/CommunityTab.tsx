@@ -25,7 +25,7 @@ const CommunityTab: React.FC = () => {
   const [requestingUser, setRequestingUser] = useState<string>(""); 
 
   const authToken = localStorage.getItem("authToken");
-  const userId = authToken ? parseInt(JSON.parse(authToken)) : null;
+  const userId = authToken ? parseInt(JSON.parse(authToken)) : 7;
 
   const fetchPosts = async () => {
     try {
@@ -52,6 +52,19 @@ const CommunityTab: React.FC = () => {
   };
 
   const handleAddPost = async () => {
+    if (userId === 7) {
+      setSnackbar({
+        open: true,
+        message: "Please log in to add a post.",
+        severity: "error",
+      });
+      // Wait 3 seconds before redirecting to the login page
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 3000);
+      return;
+    }
+
     if (newPost.trim()) {
       try {
         const response = await axios.post(`${BACKEND_API_Link}/community/create`, {
@@ -78,6 +91,19 @@ const CommunityTab: React.FC = () => {
   };
 
   const handleInteraction = async (id: number, action: "like" | "dislike") => {
+    if (userId === 7) {
+      setSnackbar({
+        open: true,
+        message: "Please log in to interact with posts.",
+        severity: "error",
+      });
+      // Wait 3 seconds before redirecting to the login page
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 3000);
+      return;
+    }
+
     const post = posts.find((p) => p.id === id);
     if (!post || loadingInteraction === id) return;
 
@@ -87,7 +113,11 @@ const CommunityTab: React.FC = () => {
 
     // Prevent liking and disliking at the same time
     if ((isLike && alreadyDisliked) || (!isLike && alreadyLiked)) {
-      setSnackbar({ open: true, message: "You can't like and dislike a post simultaneously.", severity: "error" });
+      setSnackbar({
+        open: true,
+        message: "You can't like and dislike a post simultaneously.",
+        severity: "error",
+      });
       return;
     }
 
@@ -109,7 +139,11 @@ const CommunityTab: React.FC = () => {
             ? {
                 ...p,
                 likes: like ? p.likes + 1 : alreadyLiked ? p.likes - 1 : p.likes,
-                dislikes: dislike ? p.dislikes + 1 : alreadyDisliked ? p.dislikes - 1 : p.dislikes,
+                dislikes: dislike
+                  ? p.dislikes + 1
+                  : alreadyDisliked
+                  ? p.dislikes - 1
+                  : p.dislikes,
                 user_liked: like,
                 user_disliked: dislike,
               }
@@ -151,8 +185,9 @@ const CommunityTab: React.FC = () => {
           onChange={(e) => setNewPost(e.target.value)}
           placeholder="Write a new post..."
           style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ccc", resize: "none" }}
+          // disabled={userId === 7} // Disable input for anonymous users
         />
-        <Button variant="contained" onClick={handleAddPost} sx={{ mt: 2 }}>
+        <Button variant="contained" onClick={handleAddPost} sx={{ mt: 2 }}> {/*disabled={userId === 7}>*/}
           Add Post
         </Button>
       </Box>
@@ -168,7 +203,7 @@ const CommunityTab: React.FC = () => {
             <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
               <Button
                 size="small"
-                disabled={loadingInteraction === post.id}
+                disabled={loadingInteraction === post.id} // || userId === 7} // Disable for anonymous users
                 onClick={() => handleInteraction(post.id, "like")}
                 sx={{
                   color: post.user_liked ? "white" : "inherit",
@@ -180,7 +215,7 @@ const CommunityTab: React.FC = () => {
               </Button>
               <Button
                 size="small"
-                disabled={loadingInteraction === post.id}
+                disabled={loadingInteraction === post.id } //|| userId === 7} // Disable for anonymous users
                 onClick={() => handleInteraction(post.id, "dislike")}
                 sx={{
                   color: post.user_disliked ? "white" : "inherit",

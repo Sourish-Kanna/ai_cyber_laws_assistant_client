@@ -62,9 +62,9 @@ const router = createBrowserRouter([
       {
         path: routes.COMMUNITY_TAB,
         element: (
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Pages.CommunityTab />
-            </ProtectedRoute>
+            // </ProtectedRoute>
         ),
       },
     ],

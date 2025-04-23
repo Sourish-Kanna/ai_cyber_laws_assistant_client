@@ -42,6 +42,7 @@ import {
   AccountPreview,
   AccountPopoverFooter,
   SignOutButton,
+  SignInButton,
   AccountPreviewProps,
 } from "@toolpad/core/Account";
 import { green } from "@mui/material/colors";
@@ -261,6 +262,8 @@ const accounts = [
 ];
 
 function SidebarFooterAccountPopover({ userData }: { userData: any }) {
+  const isAnonymous = userData?.name === "Anonymous User";
+
   return (
     <Stack direction="column">
       <Typography variant="body2" mx={2} mt={1}>
@@ -303,12 +306,24 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
             primaryTypographyProps={{ variant: "body2" }}
             secondaryTypographyProps={{ variant: "caption" }}
           />
-        </MenuItem>
-      </MenuList>
-      <Divider />
+        
+      {/* <Divider /> */}
       <AccountPopoverFooter>
-        <SignOutButton />
+        {isAnonymous ? (
+          <SignInButton
+            onClick={() => {
+              // Redirect to sign-in page or trigger sign-in logic
+              window.location.href = "/login"; // Example: Redirect to login page
+            }}
+          />
+        ) : (
+          <div>
+          <SignOutButton />
+          </div>
+        )}
       </AccountPopoverFooter>
+      </MenuItem>
+      </MenuList>
     </Stack>
   );
 }
@@ -504,7 +519,7 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
     >
       <DashboardLayout
         slots={{
-          appTitle: () => <CustomAppTitle/>,
+          appTitle: () => <CustomAppTitle />,
           toolbarActions: ToolbarActionsSearch,
           sidebarFooter: () => <SidebarFooterAccountPopover userData={userData} />,
         }}

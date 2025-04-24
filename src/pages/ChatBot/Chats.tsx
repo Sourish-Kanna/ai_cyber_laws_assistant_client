@@ -1,5 +1,5 @@
 // Chats.tsx
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as pages from "../../index.ts";
 import { Tooltip, CircularProgress } from "@mui/material";
 import { Copy } from "lucide-react";

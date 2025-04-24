@@ -1,12 +1,12 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { createTheme } from "@mui/material/styles";
+// import { createTheme } from "@mui/material/styles";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 // import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import DescriptionIcon from "@mui/icons-material/Description";
-import LayersIcon from "@mui/icons-material/Layers";
+// import BarChartIcon from "@mui/icons-material/BarChart";
+// import DescriptionIcon from "@mui/icons-material/Description";
+// import LayersIcon from "@mui/icons-material/Layers";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 // import * as pages from "./index"
 import {
@@ -17,14 +17,14 @@ import {
 } from "@toolpad/core/AppProvider";
 import {
   DashboardLayout,
-  SidebarFooterProps,
+  // SidebarFooterProps,
   ThemeSwitcher,
 } from "@toolpad/core/DashboardLayout";
 // import { useDemoRouter } from "@toolpad/core/internal";
 import {
   Avatar,
   Chip,
-  Divider,
+  // Divider,
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -38,12 +38,12 @@ import { SearchIcon, CheckCircleIcon, MailIcon } from "lucide-react";
 import Badge from "@mui/material/Badge";
 import CloudCircleIcon from "@mui/icons-material/CloudCircle";
 import {
-  Account,
-  AccountPreview,
+  // Account,
+  // AccountPreview,
   AccountPopoverFooter,
   SignOutButton,
   SignInButton,
-  AccountPreviewProps,
+  // AccountPreviewProps,
 } from "@toolpad/core/Account";
 import { green } from "@mui/material/colors";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
@@ -225,41 +225,41 @@ function CustomAppTitle() {
   );
 }
 
-function AccountSidebarPreview(props: AccountPreviewProps & { mini: boolean }) {
-  const { handleClick, open, mini } = props;
-  return (
-    <Stack direction="column" p={0}>
-      <Divider />
-      <AccountPreview
-        variant={mini ? "condensed" : "expanded"}
-        handleClick={handleClick}
-        open={open}
-      />
-    </Stack>
-  );
-}
+// function AccountSidebarPreview(props: AccountPreviewProps & { mini: boolean }) {
+//   const { handleClick, open, mini } = props;
+//   return (
+//     <Stack direction="column" p={0}>
+//       <Divider />
+//       <AccountPreview
+//         variant={mini ? "condensed" : "expanded"}
+//         handleClick={handleClick}
+//         open={open}
+//       />
+//     </Stack>
+//   );
+// }
 
-const accounts = [
-  {
-    id: 1,
-    name: "Bharat Kashyap",
-    email: "bharatkashyap@outlook.com",
-    image: "https://avatars.githubusercontent.com/u/19550456",
-    projects: [
-      {
-        id: 3,
-        title: "Project X",
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Testing MUI",
-    email: "Testing1@mui.com",
-    color: "#8B4513", // Brown color
-    projects: [{ id: 4, title: "Project A" }],
-  },
-];
+// const accounts = [
+//   {
+//     id: 1,
+//     name: "Bharat Kashyap",
+//     email: "bharatkashyap@outlook.com",
+//     image: "https://avatars.githubusercontent.com/u/19550456",
+//     projects: [
+//       {
+//         id: 3,
+//         title: "Project X",
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     name: "Testing MUI",
+//     email: "Testing1@mui.com",
+//     color: "#8B4513", // Brown color
+//     projects: [{ id: 4, title: "Project A" }],
+//   },
+// ];
 
 function SidebarFooterAccountPopover({ userData }: { userData: any }) {
   const isAnonymous = userData === null;
@@ -325,59 +325,59 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
   );
 }
 
-const createPreviewComponent = (mini: boolean) => {
-  function PreviewComponent(props: AccountPreviewProps) {
-    return <AccountSidebarPreview {...props} mini={mini} />;
-  }
-  return PreviewComponent;
-};
+// const createPreviewComponent = (mini: boolean) => {
+//   function PreviewComponent(props: AccountPreviewProps) {
+//     return <AccountSidebarPreview {...props} mini={mini} />;
+//   }
+//   return PreviewComponent;
+// };
 
-function SidebarFooterAccount({ mini }: SidebarFooterProps) {
-  const PreviewComponent = React.useMemo(
-    () => createPreviewComponent(mini),
-    [mini]
-  );
-  const AppContext = React.createContext({ userData: null });
-  const { userData } = React.useContext(AppContext);
-  return (
-    <Account
-      slots={{
-        preview: PreviewComponent,
-        popoverContent: () => <SidebarFooterAccountPopover userData={userData} />,
-      }}
-      slotProps={{
-        popover: {
-          transformOrigin: { horizontal: "left", vertical: "bottom" },
-          anchorOrigin: { horizontal: "right", vertical: "bottom" },
-          disableAutoFocus: true,
-          slotProps: {
-            paper: {
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                filter: (theme) =>
-                  `drop-shadow(0px 2px 8px ${theme.palette.mode === "dark" ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.32)"})`,
-                mt: 1,
-                "&::before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  bottom: 10,
-                  left: 0,
-                  width: 10,
-                  height: 10,
-                  bgcolor: "background.paper",
-                  transform: "translate(-50%, -50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
-            },
-          },
-        },
-      }}
-    />
-  );
-}
+// function SidebarFooterAccount({ mini }: SidebarFooterProps) {
+//   const PreviewComponent = React.useMemo(
+//     () => createPreviewComponent(mini),
+//     [mini]
+//   );
+//   const AppContext = React.createContext({ userData: null });
+//   const { userData } = React.useContext(AppContext);
+//   return (
+//     <Account
+//       slots={{
+//         preview: PreviewComponent,
+//         popoverContent: () => <SidebarFooterAccountPopover userData={userData} />,
+//       }}
+//       slotProps={{
+//         popover: {
+//           transformOrigin: { horizontal: "left", vertical: "bottom" },
+//           anchorOrigin: { horizontal: "right", vertical: "bottom" },
+//           disableAutoFocus: true,
+//           slotProps: {
+//             paper: {
+//               elevation: 0,
+//               sx: {
+//                 overflow: "visible",
+//                 filter: (theme) =>
+//                   `drop-shadow(0px 2px 8px ${theme.palette.mode === "dark" ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.32)"})`,
+//                 mt: 1,
+//                 "&::before": {
+//                   content: '""',
+//                   display: "block",
+//                   position: "absolute",
+//                   bottom: 10,
+//                   left: 0,
+//                   width: 10,
+//                   height: 10,
+//                   bgcolor: "background.paper",
+//                   transform: "translate(-50%, -50%) rotate(45deg)",
+//                   zIndex: 0,
+//                 },
+//               },
+//             },
+//           },
+//         },
+//       }}
+//     />
+//   );
+// }
 
 const NotificationBar = () => {
   return (
@@ -489,7 +489,7 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
         window={demoWindow}
         authentication={authentication}
         // session={session}
-        userData={null} // Pass null userData for anonymous state
+        // userData={null} // Pass null userData for anonymous state
       >
         <DashboardLayout
           slots={{
@@ -517,7 +517,7 @@ export default function DashboardLayoutAccountSidebar(props: DemoProps) {
       window={demoWindow}
       authentication={authentication}
       session={session}
-      userData={userData}
+      // userData={userData} // Pass userData for authenticated state
     >
       <DashboardLayout
         slots={{

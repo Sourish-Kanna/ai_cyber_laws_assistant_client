@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import * as chatServices from "../../Services/ChatServices";
 import { chat_bot_prompt } from "../../helpers/Prompt";
 import * as pages from "../../index.ts";
-import { CircularProgress } from "@mui/material";
+// import { CircularProgress } from "@mui/material";
 
 interface Message {
   message_id: number;

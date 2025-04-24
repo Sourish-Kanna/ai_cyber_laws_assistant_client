@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 import { Plus, SendHorizontal } from "lucide-react";
 import { useRef, useCallback, useEffect, useState } from "react";
 import { useTheme } from "@mui/material/styles";
-import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+// import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 
 interface InputAreaProps {
   onSendMessage: (message: string) => Promise<void>;
@@ -15,12 +15,12 @@ function InputArea({ onSendMessage, isSending }: InputAreaProps) {
   const theme = useTheme(); // Access the MUI theme
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState("");
-  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
-    useSpeechRecognition();
+  // const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+  //   useSpeechRecognition();
 
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
+  // if (!browserSupportsSpeechRecognition) {
+  //   return <span>Browser doesn't support speech recognition.</span>;
+  // }
 
   useEffect(() => {
     if (textareaRef.current) {

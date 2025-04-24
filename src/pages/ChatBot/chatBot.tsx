@@ -1,15 +1,16 @@
 // ChatBot.tsx
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as components from "../components/zindex";
 import { PanelLeftOpen, PanelRightOpen, Plus } from "lucide-react";
 import Button from "@mui/material/Button";
-import { Alert, Tooltip, Zoom } from "@mui/material";
-import * as pages from "../../index.ts";
+// import { Alert, Tooltip, Zoom } from "@mui/material";
+import {Tooltip } from "@mui/material";
+// import * as pages from "../../index.ts";
 import * as chatServices from "../../Services/ChatServices.ts";
 import { formatDateAndTime } from "@/helpers/commonHelper.ts";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { Outlet, useNavigate } from "react-router-dom";
-import * as routes from "../../routes.ts";
+// import * as routes from "../../routes.ts";
 
 export interface ChatSection {
   chat_section_id: number;
@@ -88,12 +89,12 @@ function ChatBot() {
   };
 
   const handleDeleteChat = async (id: number) => {
-    const payload = {
-      user_id: 1,
-      chat_section_id: id
-    };
+    // const payload = {
+    //   user_id: 1,
+    //   chat_section_id: id
+    // };
     // alert(id)
-    const response = await chatServices.deleteChatSection(payload);
+    // const response = await chatServices.deleteChatSection(payload);
     // console.log(response);
     toast.success("Deleted Successfully !");
     setChatSections((prev) => prev.filter((section) => section.chat_section_id !== id));

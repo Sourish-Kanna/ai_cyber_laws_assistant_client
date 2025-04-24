@@ -39,47 +39,64 @@ const router = createBrowserRouter([
               <ProtectedRoute>
                 <Pages.ChattingPage />
               </ProtectedRoute>
-            ),
-          },
-        ],
+            )
+          }
+        ]
       },
       {
         path: routes.DASHBOARD,
-        element: <Pages.Dashboard />,
+        element: <Pages.Dashboard />
       },
       {
         path: routes.USER_PROFILE,
-        element: 
-        <ProtectedRoute>
-        <Pages.UserProfile />
-        </ProtectedRoute>
+        element: (
+          <ProtectedRoute>
+            <Pages.UserProfile />
+          </ProtectedRoute>
+        )
       },
       {
         path: routes.CYBERNEWS,
-        element: <Pages.CyberNews />,
+        element: <Pages.CyberNews />
       },
       {
         path: routes.CYBERHEALTH,
-        element: <Pages.CyberHealth />,
+        element: <Pages.CyberHealth />
       },
       {
         path: routes.COMMUNITY_TAB,
         element: <Pages.CommunityTab />
       },
-    ],
+      {
+        path: routes.STATS,
+        element: <Pages.Stats />
+      },
+      {
+        path: routes.DataBreachFeed,
+        element: <Pages.databreed />
+      },
+      {
+        path: routes.AttackMap,
+        element: <Pages.AttackMap />
+      },
+      {
+        path: routes.SecurityChecklist,
+        element: <Pages.SecurityChecklist />
+      }
+    ]
   },
   {
     path: routes.LOGIN,
-    element: <Pages.Login />,
+    element: <Pages.Login />
   },
   {
     path: routes.LOGOUT,
-    element: <Pages.Logout />,
+    element: <Pages.Logout />
   },
   {
     path: routes.REGISTER,
-    element: <Pages.Register />,
-  },
+    element: <Pages.Register />
+  }
 ]);
 
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;

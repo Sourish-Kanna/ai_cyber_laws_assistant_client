@@ -88,6 +88,11 @@ const NAVIGATION: Navigation = [
     title: "Community",
     icon: <CloudCircleIcon />
   },
+  {
+    segment: "Stats",
+    title: "Stats",
+    icon: <CloudCircleIcon />
+  },
   // {
   //   kind: "divider"
   // },

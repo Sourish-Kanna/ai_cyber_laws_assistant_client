@@ -9,6 +9,10 @@ const USER_PROFILE = "/user-profile";
 const CYBERNEWS = "/cybernews";
 const CYBERHEALTH = "/cyberhealth";
 const COMMUNITY_TAB = "/community";
+const STATS = "/stats";
+const DataBreachFeed = "/databreach";
+const AttackMap = "/attackmap";
+const SecurityChecklist = "/securitychecklist";
 
 export {
   CHATBOT,
@@ -21,5 +25,9 @@ export {
   USER_PROFILE,
   CYBERNEWS,
   CYBERHEALTH,
-  COMMUNITY_TAB
+  COMMUNITY_TAB,
+  STATS,
+  DataBreachFeed,
+  AttackMap,
+  SecurityChecklist
 };

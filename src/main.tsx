@@ -13,7 +13,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { JSX } from "react";
 
 const isAuthenticated = () => {
-  return !!localStorage.getItem("authToken"); // Check if the user is logged in
+  return !!localStorage.getItem("authToken");
 };
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -49,7 +49,10 @@ const router = createBrowserRouter([
       },
       {
         path: routes.USER_PROFILE,
-        element: <Pages.UserProfile />,
+        element: 
+        <ProtectedRoute>
+        <Pages.UserProfile />
+        </ProtectedRoute>
       },
       {
         path: routes.CYBERNEWS,
@@ -61,11 +64,7 @@ const router = createBrowserRouter([
       },
       {
         path: routes.COMMUNITY_TAB,
-        element: (
-            // <ProtectedRoute>
-              <Pages.CommunityTab />
-            // </ProtectedRoute>
-        ),
+        element: <Pages.CommunityTab />
       },
     ],
   },

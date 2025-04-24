@@ -1,73 +1,209 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Avatar,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  CircularProgress,
+  useTheme,
+} from "@mui/material";
+import axios from "axios";
 
-interface Chat {
-  id: number;
-  message: string;
-  time: string;
+const BACKEND_API_Link = import.meta.env.VITE_BASE_SERVER_URL;
+
+interface UserData {
+  name: string;
+  email: string;
+  profile_img: string;
+  phone_no: string | null;
+  username: string;
+  age: number | null;
+  status: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const UserProfile: React.FC = () => {
-  const [chatHistory, setChatHistory] = useState<Chat[]>([
-    { id: 1, message: 'Hello AI', time: '2025-04-10 10:00 AM' },
-    { id: 2, message: 'How to use this app?', time: '2025-04-10 10:05 AM' },
-  ]);
+  const theme = useTheme();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = () => {
-    setChatHistory([]);
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const authToken = localStorage.getItem("authToken");
+      const userId = authToken ? parseInt(JSON.parse(authToken)) : null;
+
+      if (!userId) {
+        console.error("User ID not found in local storage.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${BACKEND_API_Link}/users/${userId}`);
+        setUserData(response.data.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? theme.palette.grey[900]
+              : theme.palette.background.default,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-[#0F0F0F] text-white p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <Container sx={{ py: 4, width: "80%" }}>
+      <Grid container spacing={4}>
         {/* Profile Header */}
-        <div className="bg-[#1C1C1C] rounded-2xl p-6 flex items-center gap-4 shadow-lg">
-          <img
-            src="https://i.pravatar.cc/100"
-            alt="Profile"
-            className="w-20 h-20 rounded-full border-2 border-green-500"
-          />
-          <div>
-            <h2 className="text-2xl font-bold">Testing</h2>
-            <p className="text-gray-400">testing@outlook.com</p>
-          </div>
-        </div>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? theme.palette.grey[800]
+                  : theme.palette.background.paper,
+              borderRadius: 2,
+              p: 4,
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              boxShadow: theme.shadows[3],
+            }}
+          >
+            <Avatar
+              src={userData?.profile_img || ""}
+              alt="Profile"
+              sx={{
+                width: 80,
+                height: 80,
+              }}
+            />
+            <Box>
+              <Typography variant="h5" fontWeight="bold">
+                {userData?.name || "Guest"}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {userData?.email || "guest@example.com"}
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
 
-        {/* Chat History */}
-        <div className="bg-[#1C1C1C] rounded-2xl p-6 shadow-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold">Chat History</h3>
-            <button
-              onClick={handleDelete}
-              className="text-red-400 hover:text-red-600 font-medium"
-            >
-              Delete All
-            </button>
-          </div>
-          {chatHistory.length > 0 ? (
-            <ul className="space-y-2">
-              {chatHistory.map((chat) => (
-                <li key={chat.id} className="bg-[#2A2A2A] p-4 rounded-lg">
-                  <p className="text-white">{chat.message}</p>
-                  <p className="text-sm text-gray-500">{chat.time}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500">No chat history found.</p>
-          )}
-        </div>
-
-        {/* Settings */}
-        <div className="bg-[#1C1C1C] rounded-2xl p-6 shadow-lg space-y-4">
-          <h3 className="text-xl font-semibold">Account Settings</h3>
-          <ul className="space-y-2 text-gray-300">
-            <li className="hover:text-white cursor-pointer">🔒 Change Password</li>
-            <li className="hover:text-white cursor-pointer">📧 Update Email</li>
-            <li className="hover:text-white cursor-pointer">🚪 Logout</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+        {/* Account Info */}
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? theme.palette.grey[800]
+                  : theme.palette.background.paper,
+              borderRadius: 2,
+              p: 4,
+              boxShadow: theme.shadows[3],
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold" gutterBottom>
+              Account Info
+            </Typography>
+            <Divider sx={{ mb: 2 }} />
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary="Name"
+                  secondary={userData?.name || "N/A"}
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="Email"
+                  secondary={userData?.email || "N/A"}
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="Username"
+                  secondary={userData?.username || "N/A"}
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="Phone Number"
+                  secondary={userData?.phone_no || "N/A"}
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="Age"
+                  secondary={userData?.age || "N/A"}
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="Account Created At"
+                  secondary={
+                    new Date(userData?.createdAt || "").toLocaleString() || "N/A"
+                  }
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="Last Updated At"
+                  secondary={
+                    new Date(userData?.updatedAt || "").toLocaleString() || "N/A"
+                  }
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <ListItemText
+                  primary="Account Status"
+                  secondary={userData?.status ? "Active" : "Inactive"}
+                  primaryTypographyProps={{ fontWeight: "bold" }}
+                />
+              </ListItem>
+            </List>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

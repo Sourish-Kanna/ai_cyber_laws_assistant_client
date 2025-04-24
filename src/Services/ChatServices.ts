@@ -30,7 +30,7 @@ export const getAllChatSections = async (userId: number) => {
   if (!userId) {
     throw new Error("User Id is required");
   }
-
+  console.log(userId)
   try {
     const response = await axios.get(`${API_BASE_URL}/chat/chat_section/all`, {
       params: { user_id: userId }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Box, Typography, Card, CardContent, Button, Divider, TextField, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
 
@@ -7,7 +7,7 @@ function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [quizAnswer, setQuizAnswer] = useState("");
   const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true);
+  // const [showWelcome, setShowWelcome] = useState(true);
 
   const cyberTip =
     "Use multi-factor authentication (MFA) whenever possible to add an extra layer of security.";
@@ -22,10 +22,10 @@ function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setShowWelcome(false), 4000);
-    return () => clearTimeout(timeout);
-  }, []);
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => setShowWelcome(false), 4000);
+  //   return () => clearTimeout(timeout);
+  // }, []);
 
   const handleQuizSubmit = () => {
     setQuizSubmitted(true);

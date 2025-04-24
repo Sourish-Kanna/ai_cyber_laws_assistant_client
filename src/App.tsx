@@ -286,6 +286,10 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
               width: "100%",
               columnGap: 2,
             }}
+            onClick={() => {
+              // Handle profile click
+              window.location.href = "/user-profile"; // Example: Redirect to profile page
+            }}
           >
             <ListItemIcon>
               <Avatar

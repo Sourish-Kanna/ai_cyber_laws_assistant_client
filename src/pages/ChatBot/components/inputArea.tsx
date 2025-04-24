@@ -54,63 +54,61 @@ function InputArea({ onSendMessage, isSending }: InputAreaProps) {
   return (
     <div
       style={{
-        backgroundColor: theme.palette.background.paper,
-        color: theme.palette.text.primary,
-        borderRadius: theme.shape.borderRadius,
-        padding: theme.spacing(0.5),
-        maxWidth: "50vw",
-        minWidth: "50vw",
-        maxHeight: "30vh",
-        minHeight: "10vh",
-        // overflowY: "auto",
-        transition: "all 0.2s",
+      backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[900] : theme.palette.grey[100],
+      color: theme.palette.mode === "dark" ? theme.palette.grey[400] : theme.palette.text.primary,
+      borderRadius: theme.shape.borderRadius,
+      padding: theme.spacing(0.5),
+      maxWidth: "50vw",
+      minWidth: "50vw",
+      maxHeight: "30vh",
+      minHeight: "10vh",
+      transition: "all 0.2s",
       }}
     >
       <Textarea
-        ref={textareaRef}
-        onInput={handleInput}
-        onChange={(e) => setMessage(e.target.value)}
-        value={message}
-        placeholder="Type your message here."
-        disabled={isSending}
-        style={{
-          backgroundColor: theme.palette.background.default,
-          color: theme.palette.text.primary,
-          borderRadius: theme.shape.borderRadius,
-          width: "100%",
-          // padding: theme.spacing(1.5),
-          fontSize: theme.typography.body1.fontSize,
-          border: "none",
-          outline: "none",
-          resize: "none",
-          overflowY: "auto",
-          maxHeight: "20vh",
-          minHeight: "5vh",
-        }}
+      ref={textareaRef}
+      onInput={handleInput}
+      onChange={(e) => setMessage(e.target.value)}
+      value={message}
+      placeholder="Type your message here."
+      disabled={isSending}
+      style={{
+        backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[200],
+        color: theme.palette.mode === "dark" ? theme.palette.grey[300] : theme.palette.text.primary,
+        borderRadius: theme.shape.borderRadius,
+        width: "100%",
+        fontSize: theme.typography.body1.fontSize,
+        border: "none",
+        outline: "none",
+        resize: "none",
+        overflowY: "auto",
+        maxHeight: "20vh",
+        minHeight: "5vh",
+      }}
       />
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: theme.spacing(1) }}>
-        <IconButton
-          aria-label="Attach"
-          color="default"
-          disabled={isSending}
-          style={{
-            backgroundColor: theme.palette.action.hover,
-          }}
-        >
-          <Plus size={20} />
-        </IconButton>
-        <IconButton
-          aria-label="Send"
-          color="success"
-          onClick={handleCreateMessage}
-          disabled={isSending}
-          style={{
-            backgroundColor: theme.palette.success.main,
-            color: theme.palette.success.contrastText,
-          }}
-        >
-          <SendHorizontal size={20} />
-        </IconButton>
+      <IconButton
+        aria-label="Attach"
+        color="default"
+        disabled={isSending}
+        style={{
+        backgroundColor: theme.palette.mode === "dark" ? theme.palette.grey[800] : theme.palette.grey[300],
+        }}
+      >
+        <Plus size={20} />
+      </IconButton>
+      <IconButton
+        aria-label="Send"
+        color="success"
+        onClick={handleCreateMessage}
+        disabled={isSending}
+        style={{
+        backgroundColor: theme.palette.mode === "dark" ? theme.palette.success.dark : theme.palette.success.main,
+        color: theme.palette.success.contrastText,
+        }}
+      >
+        <SendHorizontal size={20} />
+      </IconButton>
       </div>
     </div>
   );

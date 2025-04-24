@@ -24,11 +24,12 @@ function ChattingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
   const chatSectionId = chat_section_id ? parseInt(chat_section_id, 10) : null;
+  const auth_token = localStorage.getItem("authToken");
 
   const fetchMessages = async () => {
     try {
       const payload = {
-        user_id: 1,
+        user_id: auth_token ? parseInt(auth_token, 10) : 0,
         chat_section_id: chatSectionId
       };
       const response = await chatServices.get_messages(payload);
@@ -53,7 +54,7 @@ function ChattingPage() {
       };
 
       const params = {
-        user_id: 1,
+        user_id: auth_token ? parseInt(auth_token, 10) : 0,
         chat_section_id: chatSectionId
       };
 

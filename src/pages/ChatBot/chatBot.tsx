@@ -21,7 +21,7 @@ export interface ChatSection {
 
 function ChatBot() {
   const navigate = useNavigate();
-
+  const auth_token = localStorage.getItem("authToken");
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token) {
@@ -51,7 +51,9 @@ function ChatBot() {
 
   const fetchChatSections = async () => {
     try {
-      const response = await chatServices.getAllChatSections(1);
+      // const user = localStorage.getItem('user')
+      
+      const response = await chatServices.getAllChatSections(auth_token ? parseInt(auth_token, 10) : 0);
       const sections = response.data.data.map((section: any) => {
         const FormatedDate = formatDateAndTime(section.updatedAt);
         return {
@@ -75,7 +77,7 @@ function ChatBot() {
   const handleAddChat = async () => {
     try {
       const payload = {
-        user_id: 1
+        user_id: auth_token ? parseInt(auth_token, 10) : 0
       };
       const response = await chatServices.createChatSection(payload);
       fetchChatSections();

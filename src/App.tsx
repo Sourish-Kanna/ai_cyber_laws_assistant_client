@@ -22,7 +22,7 @@ import {
 } from "@toolpad/core/DashboardLayout";
 // import { useDemoRouter } from "@toolpad/core/internal";
 import {
-  Avatar,
+  // Avatar,
   Chip,
   // Divider,
   IconButton,
@@ -38,7 +38,7 @@ import { SearchIcon, CheckCircleIcon, MailIcon } from "lucide-react";
 import Badge from "@mui/material/Badge";
 import CloudCircleIcon from "@mui/icons-material/CloudCircle";
 import {
-  // Account,
+  Account,
   // AccountPreview,
   AccountPopoverFooter,
   SignOutButton,
@@ -276,8 +276,7 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
             }}
           / >
         </AccountPopoverFooter>
-      ) : (
-        
+      ) : ( 
         <MenuList>
           <MenuItem
             component="button"
@@ -286,9 +285,13 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
               width: "100%",
               columnGap: 2,
             }}
+            onClick={() => {
+              // Handle profile click
+              window.location.href = "/user-profile"; // Example: Redirect to profile page
+            }}
           >
             <ListItemIcon>
-              <Avatar
+              {/* <Avatar
                 sx={{
                   width: 32,
                   height: 32,
@@ -301,7 +304,8 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
                 }}
               >
                 {userData.name ? userData.name[0] : ""}
-              </Avatar>
+              </Avatar> */}
+              <Account />
             </ListItemIcon>
             <ListItemText
               sx={{

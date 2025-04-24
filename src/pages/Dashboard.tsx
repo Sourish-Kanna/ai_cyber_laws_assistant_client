@@ -1,13 +1,20 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, Card, CardContent, Button, Divider, TextField, useTheme } from "@mui/material";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+  Divider,
+  TextField,
+  useTheme
+} from "@mui/material";
 
 function Dashboard() {
-  const theme = useTheme(); // Access the app's theme
   const [currentTime, setCurrentTime] = useState(new Date());
   const [quizAnswer, setQuizAnswer] = useState("");
   const [quizSubmitted, setQuizSubmitted] = useState(false);
-  // const [showWelcome, setShowWelcome] = useState(true);
+  const theme = useTheme(); // detect theme mode
 
   const cyberTip =
     "Use multi-factor authentication (MFA) whenever possible to add an extra layer of security.";
@@ -22,45 +29,20 @@ function Dashboard() {
     return () => clearInterval(timer);
   }, []);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => setShowWelcome(false), 4000);
-  //   return () => clearTimeout(timeout);
-  // }, []);
-
   const handleQuizSubmit = () => {
     setQuizSubmitted(true);
   };
 
+  // Dynamic card background color
+  const cardStyle = {
+    mb: 4,
+    backgroundColor: theme.palette.mode === "dark" ? "#1e1e1e" : "#f5f5f5"
+  };
+
   return (
-    <Box
-      sx={{
-        p: 4,
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.background.default,
-      }}
-    >
-      {/* Animated Welcome Message */}
-        {/* {showWelcome ? ( */}
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <Typography
-          variant="h4"
-          align="center"
-          sx={{
-            mb: 4,
-            fontWeight: "bold",
-            color: theme.palette.success.main,
-          }}
-            >
-          Welcome Back to Your Cyber Dashboard!
-            </Typography>
-          </motion.div>
-        
-      <Card sx={{ mb: 4, backgroundColor: theme.palette.background.paper }}>
+    <Box sx={{ p: 4 }}>
+      {/* Live Clock */}
+      <Card sx={cardStyle}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Current Time
@@ -70,7 +52,7 @@ function Dashboard() {
       </Card>
 
       {/* Daily Cyber Awareness Quiz */}
-      <Card sx={{ mb: 4, backgroundColor: theme.palette.background.paper }}>
+      <Card sx={cardStyle}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Daily Cyber Awareness Quiz
@@ -87,25 +69,15 @@ function Dashboard() {
             onChange={(e) => setQuizAnswer(e.target.value)}
             sx={{
               my: 2,
-              backgroundColor: theme.palette.background.default,
-              borderRadius: 1,
+              backgroundColor: theme.palette.background.paper,
+              borderRadius: 1
             }}
           />
-          <Button
-            variant="contained"
-            onClick={handleQuizSubmit}
-            sx={{
-              backgroundColor: theme.palette.primary.main,
-              color: theme.palette.primary.contrastText,
-              "&:hover": {
-                backgroundColor: theme.palette.primary.dark,
-              },
-            }}
-          >
+          <Button variant="contained" onClick={handleQuizSubmit}>
             Submit Answer
           </Button>
           {quizSubmitted && (
-            <Typography variant="body2" sx={{ mt: 2, color: theme.palette.success.main }}>
+            <Typography variant="body2" sx={{ mt: 2, color: "green" }}>
               ✅ Great! Always be cautious and verify suspicious messages.
             </Typography>
           )}
@@ -113,7 +85,7 @@ function Dashboard() {
       </Card>
 
       {/* Cybersecurity Tip of the Week */}
-      <Card sx={{ mb: 4, backgroundColor: theme.palette.background.paper }}>
+      <Card sx={cardStyle}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Cybersecurity Tip of the Week
@@ -123,7 +95,7 @@ function Dashboard() {
       </Card>
 
       {/* Cyber Glossary Snippet */}
-      <Card sx={{ backgroundColor: theme.palette.background.paper }}>
+      <Card sx={cardStyle}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
             Cyber Glossary Snippet

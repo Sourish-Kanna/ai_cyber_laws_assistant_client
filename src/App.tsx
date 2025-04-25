@@ -53,6 +53,12 @@ import axios from "axios";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {demoTheme} from "@/Theme";
 import NotificationBar from "./pages/components/NotificationBar";
+import { BetweenHorizontalEnd } from "lucide-react";
+import { EarthLock  } from "lucide-react";
+import { MapPinned } from "lucide-react";
+
+
+
 
 // import type { Router, Session } from "@toolpad/core/AppProvider";
 // import { SidebarFooter } from "./components/ui/sidebar";
@@ -93,6 +99,21 @@ const NAVIGATION: Navigation = [
     title: "Stats",
     icon: <CloudCircleIcon />
   },
+  {
+    segment: "databreach",
+    title: "Data Breach",
+    icon: <BetweenHorizontalEnd />
+  },
+  {
+    segment: "attackmap",
+    title: "Attack Map",
+    icon: <MapPinned />
+  },
+  {
+    segment: "securitychecklist",
+    title: "Security Checklist",
+    icon: <EarthLock />
+  }
   // {
   //   kind: "divider"
   // },

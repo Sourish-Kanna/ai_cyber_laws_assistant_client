@@ -5,12 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { Container, Typography, Box, TextField, Grid, Link, Button } from "@mui/material";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { demoTheme } from "@/Theme";
+import { Tooltip, CircularProgress } from "@mui/material";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+
 
 const backendUrl = import.meta.env.VITE_BASE_SERVER_URL;
 
 function Login() {
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [loading , setLoading ] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const email_login = async (event: React.FormEvent) => {
@@ -19,7 +23,9 @@ function Login() {
 
     try {
       // localStorage.removeItem("authToken"); // Remove any existing token
+      setLoading(true)
       const response = await axios.post(`${backendUrl}/auth/login`, { email });
+      setLoading(false);
       localStorage.setItem("authToken", response.data.token);
       setTimeout(() => navigate("/"), 2000);
     } catch (err: any) {
@@ -32,13 +38,16 @@ function Login() {
     if (credential) {
       try {
         // localStorage.removeItem("authToken"); // Remove any existing token
+        setLoading(true);
         const response = await axios.post(
           `${backendUrl}/auth/google`,
           { credential },
           { withCredentials: true }
         );
+        setLoading(false);
         localStorage.setItem("authToken", response.data.token);
-        setTimeout(() => navigate("/"), 2000);
+        toast.success("Login Successfully!");
+        setTimeout(() => navigate("/dashboard"), 2000);
       } catch (err: any) {
         setError(err.response?.data?.message || "Google login failed.");
       }
@@ -50,8 +59,21 @@ function Login() {
   return (
     <AppProvider theme={demoTheme}>
       <Container className="flex flex-col items-center justify-center h-screen">
+        <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+          transition={Bounce}
+        />
         <Typography variant="h4" className="mb-4">
-          Login
+          {loading ? "Logging in..." : "Login"}
         </Typography>
         <Box component="form" onSubmit={email_login} className="w-full max-w-md mt-4">
           <Grid container spacing={2}>
@@ -81,10 +103,10 @@ function Login() {
                   fontWeight: "bold",
                   backgroundColor: "#00C853",
                   color: "#fff",
-                  "&:hover": { backgroundColor: "#00B44D" },
+                  "&:hover": { backgroundColor: "#00B44D" }
                 }}
               >
-                Login
+                {loading ? "Logging in..." : "Login"}
               </Button>
             </Grid>
           </Grid>

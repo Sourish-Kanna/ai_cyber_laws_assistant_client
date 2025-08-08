@@ -52,6 +52,13 @@ import axios from "axios";
 
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {demoTheme} from "@/Theme";
+import NotificationBar from "./pages/components/NotificationBar";
+import { BetweenHorizontalEnd } from "lucide-react";
+import { EarthLock  } from "lucide-react";
+import { MapPinned } from "lucide-react";
+
+
+
 
 // import type { Router, Session } from "@toolpad/core/AppProvider";
 // import { SidebarFooter } from "./components/ui/sidebar";
@@ -87,6 +94,26 @@ const NAVIGATION: Navigation = [
     title: "Community",
     icon: <CloudCircleIcon />
   },
+  {
+    segment: "Stats",
+    title: "Stats",
+    icon: <CloudCircleIcon />
+  },
+  {
+    segment: "databreach",
+    title: "Data Breach",
+    icon: <BetweenHorizontalEnd />
+  },
+  {
+    segment: "attackmap",
+    title: "Attack Map",
+    icon: <MapPinned />
+  },
+  {
+    segment: "securitychecklist",
+    title: "Security Checklist",
+    icon: <EarthLock />
+  }
   // {
   //   kind: "divider"
   // },
@@ -383,31 +410,31 @@ function SidebarFooterAccountPopover({ userData }: { userData: any }) {
 //   );
 // }
 
-const NotificationBar = () => {
-  return (
-    <Stack spacing={2} direction="row" alignItems="center" sx={{ mr: 1 }}>
-      <Tooltip 
-        title="Notifications"
-        PopperProps={{
-          modifiers: [
-            {
-              name: 'offset',
-              options: {
-                offset: [0, 10], // [horizontal, vertical] offset
-              },
-            },
-          ],
-        }}
-      >
-        <Badge badgeContent={4} color="success">
-          <Box sx={{ color: "text.primary" }}>
-            <MailIcon fontSize="small" />
-          </Box>
-        </Badge>
-      </Tooltip>
-    </Stack>
-  );
-};
+// const NotificationBar = () => {
+//   return (
+//     <Stack spacing={2} direction="row" alignItems="center" sx={{ mr: 1 }}>
+//       <Tooltip 
+//         title="Notifications"
+//         PopperProps={{
+//           modifiers: [
+//             {
+//               name: 'offset',
+//               options: {
+//                 offset: [0, 10], // [horizontal, vertical] offset
+//               },
+//             },
+//           ],
+//         }}
+//       >
+//         <Badge badgeContent={4} color="success">
+//           <Box sx={{ color: "text.primary" }}>
+//             <MailIcon fontSize="small" />
+//           </Box>
+//         </Badge>
+//       </Tooltip>
+//     </Stack>
+//   );
+// };
 
 interface DemoProps {
   /**

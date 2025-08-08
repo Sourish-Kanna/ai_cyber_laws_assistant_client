@@ -15,3 +15,7 @@ export { default as CyberNews } from "./pages/CyberNews.tsx";
 export { default as CyberHealth } from "./pages/CyberHealth.tsx";
 export { default as UserProfile } from "./pages/ChatBot/UserProfile.tsx";
 export { default as CommunityTab } from "./pages/CommunityTab.tsx";
+export { default as Stats } from "./pages/Stats.tsx";
+export { default as databreed } from "./pages/DataBreed.tsx";
+export { default as AttackMap } from "./pages/CyberAttackMap.tsx";
+export { default as SecurityChecklist } from "./pages/BestPractices.tsx";

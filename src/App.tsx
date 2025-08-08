@@ -1,5 +1,5 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
+// import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 // import { createTheme } from "@mui/material/styles";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -34,8 +34,8 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { SearchIcon, CheckCircleIcon, MailIcon } from "lucide-react";
-import Badge from "@mui/material/Badge";
+import { SearchIcon, CheckCircleIcon} from "lucide-react";
+// import Badge from "@mui/material/Badge";
 import CloudCircleIcon from "@mui/icons-material/CloudCircle";
 import {
   Account,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography, Card, CardContent, LinearProgress, Skeleton } from "@mui/material";
+import { Grid, Typography, Card, CardContent,  Skeleton } from "@mui/material";
 import { Security, Report, Warning, LockPerson, Timeline, MoneyOff } from "@mui/icons-material";
 import {
   LineChart,

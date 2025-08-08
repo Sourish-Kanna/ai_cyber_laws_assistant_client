@@ -29,6 +29,7 @@ function InputArea({ onSendMessage, isSending }: InputAreaProps) {
 
   useEffect(() => {
     setMessage((prev) => {
+      if (!transcript) return prev;
       const base = baseMessageRef.current;
       return base ? `${base} ${transcript}` : transcript;
     });

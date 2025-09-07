@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import * as chatServices from "../../Services/ChatServices";
 import { chat_bot_prompt } from "../../helpers/Prompt";
 import * as pages from "../../index.ts";
-// import { CircularProgress } from "@mui/material";
 
 interface Message {
   message_id: number;
@@ -18,6 +17,18 @@ interface Message {
   chat_section_id: number;
 }
 
+const formatChatHistory = (messages: Message[], currentUserId: number): string => {
+  if (!messages || messages.length === 0) {
+    return "No previous conversation.";
+  }
+  return messages
+    .map((msg) => {
+      const prefix = msg.sender_id === currentUserId ? "User:" : "AI:";
+      return `${prefix} ${msg.content}`;
+    })
+    .join("\n");
+};
+
 function ChattingPage() {
   const { chat_section_id } = useParams<{ chat_section_id: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,12 +36,17 @@ function ChattingPage() {
   const [isSending, setIsSending] = useState(false);
   const chatSectionId = chat_section_id ? parseInt(chat_section_id, 10) : null;
   const auth_token = localStorage.getItem("authToken");
+  const currentUserId = auth_token ? parseInt(auth_token, 10) : 0;
 
   const fetchMessages = async () => {
+    if (!chatSectionId || !currentUserId) {
+        setIsLoading(false);
+        return;
+    }
     try {
       const payload = {
-        user_id: auth_token ? parseInt(auth_token, 10) : 0,
-        chat_section_id: chatSectionId
+        user_id: currentUserId,
+        chat_section_id: chatSectionId,
       };
       const response = await chatServices.get_messages(payload);
       setMessages(response.data.data);
@@ -42,35 +58,65 @@ function ChattingPage() {
   };
 
   const handleSendMessage = async (messageContent: string) => {
-    if (!chatSectionId) return;
+    if (!chatSectionId || !messageContent.trim()) return;
+
+    // 1. Optimistic UI Update: Display the user's message immediately.
+    const optimisticMessage: Message = {
+      message_id: Date.now(), // Use a temporary unique ID
+      sender_id: currentUserId,
+      content: messageContent.trim(),
+      createdAt: new Date().toISOString(),
+      // --- (add other necessary fields with default/placeholder values)
+      conversation_id: 0, 
+      type: "text",
+      status: true,
+      updatedAt: new Date().toISOString(),
+      chat_section_id: chatSectionId,
+    };
+    
+    // Add the new message to the state before sending the request
+    const previousMessages = messages;
+    setMessages(prevMessages => [...prevMessages, optimisticMessage]);
 
     setIsSending(true);
     try {
-      const modified_message = chat_bot_prompt.replace("{user_query}", messageContent.trim()).replace("{user_role}", "unknown");
+      // 2. Format history from the state *before* the optimistic update
+      const chatHistory = formatChatHistory(previousMessages, currentUserId);
+      
+      // 3. Dynamically set user role
+      const userRole = previousMessages.length > 0 ? "individual" : "unknown";
+
+      // 4. Construct the full prompt with history
+      const modified_message = chat_bot_prompt
+        .replace("{chat_history}", chatHistory)
+        .replace("{user_query}", messageContent.trim())
+        .replace("{user_role}", userRole);
 
       const payload = {
         message: modified_message,
-        user_message: messageContent
+        user_message: messageContent.trim(),
       };
 
       const params = {
-        user_id: auth_token ? parseInt(auth_token, 10) : 0,
-        chat_section_id: chatSectionId
+        user_id: currentUserId,
+        chat_section_id: chatSectionId,
       };
-
+      
+      // 5. Send to backend and re-fetch to sync with the database
       await chatServices.create_message(params, payload);
       await fetchMessages();
+
     } catch (error) {
       console.error("Error sending message:", error);
+      // Optional: Handle error, e.g., show an error icon on the message
+      setMessages(previousMessages); // Revert optimistic update on failure
     } finally {
       setIsSending(false);
     }
   };
 
   useEffect(() => {
-    if (chatSectionId) {
-      fetchMessages();
-    }
+    fetchMessages();
   }, [chatSectionId]);
 
   return (

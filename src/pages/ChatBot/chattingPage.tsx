@@ -46,7 +46,7 @@ function ChattingPage() {
 
     setIsSending(true);
     try {
-      const modified_message = chat_bot_prompt.replace("{user_query}", messageContent.trim());
+      const modified_message = chat_bot_prompt.replace("{user_query}", messageContent.trim()).replace("{user_role}", "unknown");
 
       const payload = {
         message: modified_message,

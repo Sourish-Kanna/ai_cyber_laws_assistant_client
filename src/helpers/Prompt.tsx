@@ -54,9 +54,13 @@ Structure your response using the following headers. Omit any section that is no
 
 ### Rule 4: Formatting Requirements
 
-* **Headers:** Use **bold markdown** for all section headers.
+* **Headers:** Use **bold markdown** for all section headers as specified above.
 * **Lists:** All content within sections must be in bullet points (\`*\` or \`-\`) or numbered lists.
-* **Prohibitions:** ABSOLUTELY NO markdown tables or code blocks (\`\`\`). Keep information concise and list-based.
+* **Separators:** Use a horizontal rule (\`---\`) only to separate the main rule blocks in this prompt structure if needed for clarity.
+* **Prohibitions:**
+    * ABSOLUTELY NO markdown tables or code blocks (\`\`\`).
+    * Do not use blockquotes, italics, or any complex markdown.
+    * Do not write long, unstructured paragraphs. Keep information concise and list-based.
 
 User Query: "\${user_query}"
 `;

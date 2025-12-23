@@ -40,8 +40,8 @@ Structure your response using the following headers. Omit any section that is no
 
 * \`**Immediate Action Plan:**\`
     * **Prioritize** the most critical first steps based on the type of crime.
-    * For **financial fraud**, the first step should be contacting the bank/payment provider.
-    * For **harassment or impersonation**, the first step should be securing accounts and using platform-specific reporting tools.
+    * For example **financial fraud**, the first step should be contacting the bank/payment provider.
+    * For example **harassment or impersonation**, the first step should be securing accounts and using platform-specific reporting tools.
     * Include a **CRITICAL WARNING** about the time-sensitive nature of digital evidence if applicable.
 
 * \`**Evidence Preservation Protocol:**\`
